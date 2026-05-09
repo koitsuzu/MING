@@ -34,8 +34,9 @@
       </nav>
 
       <div class="nav-actions">
-        <button class="nav-btn search-toggle" aria-label="搜尋" id="search-btn">
-          <img src="image/介面與圖示/search2.png" alt="搜尋鈕" class="nav-icon">
+        <button class="nav-btn ai-toggle" aria-label="AI 助理" id="ai-btn">
+          <img src="image/介面與圖示/search2.png" alt="AI 助理" class="nav-icon rabbit-icon">
+          <span class="ai-hint-bubble" id="ai-hint-bubble">點我諮詢 AI 助理 🌸</span>
         </button>
         <button class="nav-btn bag-toggle" aria-label="購物袋" id="cart-btn">
           <img src="image/介面與圖示/bag.png" alt="購物袋鈕" class="nav-icon">
@@ -54,7 +55,7 @@
   <section class="hero-section" id="hero">
     <div class="carousel-container">
       <!-- 輪播投影片 1 -->
-      <div class="carousel-slide active" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('image/品牌與背景/輪播_20週年紀念.jpg');">
+      <div class="carousel-slide active" style="background-image: linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%), url('file:///Users/qaro/.gemini/antigravity/brain/dc9b8b95-d245-460c-8bb0-99205fb62b2e/anniversary_banner_bg_1778336781601.png');">
         <div class="slide-content">
           <span class="slide-subtitle">二〇週年・感恩限定</span>
           <h1 class="slide-title">手作傳承<br>一期一會的極致溫度</h1>
@@ -63,7 +64,7 @@
         </div>
       </div>
       <!-- 輪播投影片 2 -->
-      <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('image/品牌與背景/輪播_大福花皿.jpg');">
+      <div class="carousel-slide" style="background-image: linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%), url('image/品牌與背景/輪播_大福花皿.jpg');">
         <div class="slide-content">
           <span class="slide-subtitle">時令定番・花皿盛宴</span>
           <h1 class="slide-title">櫻綻大福<br>粉雪輕裹的和風蜜意</h1>
@@ -72,7 +73,7 @@
         </div>
       </div>
       <!-- 輪播投影片 3 -->
-      <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('image/品牌與背景/輪播_職人工藝.jpg');">
+      <div class="carousel-slide" style="background-image: linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%), url('image/品牌與背景/輪播_職人工藝.jpg');">
         <div class="slide-content">
           <span class="slide-subtitle">極致美學・職人工藝</span>
           <h1 class="slide-title">生菓子藝術<br>指尖雕琢的四季流轉</h1>
@@ -97,9 +98,12 @@
       <span class="dot" data-index="2"></span>
     </div>
 
-    <!-- 裝飾邊角花卉 -->
-    <img src="image/背景與裝飾/flower1.png" alt="和風裝飾花" class="corner-flower left">
-    <img src="image/背景與裝飾/flower2.png" alt="和風裝飾花" class="corner-flower right">
+    <!-- 流水禪意波浪分隔線 -->
+    <div class="zen-wave-divider bottom-wave">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,60 C150,100 350,120 600,70 C850,20 1050,40 1200,90 L1200,120 L0,120 Z" fill="#FAFAF8"></path>
+      </svg>
+    </div>
   </section>
 
   <!-- 品牌精選推薦區 (Featured Badges) -->
@@ -143,6 +147,13 @@
         </div>
       </div>
     </div>
+
+    <!-- 流水禪意波浪分隔線 -->
+    <div class="zen-wave-divider bottom-wave">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,40 C180,90 360,110 600,50 C840,0 1020,20 1200,70 L1200,120 L0,120 Z" fill="#F5F2EB"></path>
+      </svg>
+    </div>
   </section>
 
   <!-- 臻品點心坊 (Product Filter Gallery) -->
@@ -167,6 +178,13 @@
       <div class="products-grid" id="products-grid">
         <!-- 商品卡片將透過 JS 動態渲染以載入對應的 /image 下的所有真實產品，確保展示極致豐富度 -->
       </div>
+    </div>
+
+    <!-- 流水禪意波浪分隔線 -->
+    <div class="zen-wave-divider bottom-wave">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,50 C150,110 380,80 600,40 C820,0 1050,30 1200,70 L1200,120 L0,120 Z" fill="#FAFAF8"></path>
+      </svg>
     </div>
   </section>
 
@@ -238,6 +256,13 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- 流水禪意波浪分隔線 -->
+    <div class="zen-wave-divider bottom-wave">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,60 C200,20 400,110 600,50 C800,-10 1000,10 1200,60 L1200,120 L0,120 Z" fill="#FAFAF8"></path>
+      </svg>
     </div>
   </section>
 
@@ -369,6 +394,63 @@
       </div>
     </div>
   </footer>
+
+  <!-- 頂級和風模擬結帳彈出視窗 (Wagashi Checkout Modal) -->
+  <div class="checkout-modal" id="checkout-modal">
+    <div class="modal-overlay" id="modal-close-overlay"></div>
+    <div class="modal-content">
+      <button class="modal-close-btn" id="modal-close-btn-x">&times;</button>
+      <div class="modal-body text-center">
+        <!-- 狀態圖片 -->
+        <div class="modal-icon-wrapper">
+          <img src="image/互動與問答/do1.png" alt="小狐狸引導" class="modal-mascot-img" id="modal-mascot">
+        </div>
+        <!-- 標題與內文 -->
+        <h3 class="modal-title font-serif" id="modal-title">您尚未加入任何臻品喔</h3>
+        <p class="modal-text" id="modal-text">快去「臻品點心坊」選購心儀的和風美饌吧！</p>
+        <button class="btn-primary modal-action-btn" id="modal-action-btn">探尋臻品</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 智能和風助理視窗 (AI Wagashi Chat Window) -->
+  <div class="ai-chat-window" id="ai-chat-window">
+    <div class="ai-chat-header">
+      <div class="ai-chat-title">
+        <img src="image/介面與圖示/search2.png" alt="AI 兔子" class="ai-chat-avatar">
+        <div>
+          <h4 class="font-serif" style="margin: 0; font-size: 1rem; color: #4A2321;">饈菓子 兔子助理</h4>
+          <span class="ai-status">🟢 在線點心諮詢中</span>
+        </div>
+      </div>
+      <button class="ai-close-btn" id="ai-close-btn" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #888;">&times;</button>
+    </div>
+    
+    <div class="ai-chat-messages" id="ai-chat-messages">
+      <div class="message ai-message animate-fade-in">
+        <div class="message-content">
+          🌸 您好！我是饈菓子的兔子助理。很高興與您相遇！
+
+          我是專屬這個網站的和菓子智能助理。您可以直接向我詢問關於「臻品點心」、「職人工藝」、「品牌理念」或「茶席搭配」的話題，或者點擊下方按鈕直接與我展開話題喔！
+        </div>
+      </div>
+      <div class="quick-options" id="quick-options">
+        <button class="quick-opt-btn" data-question="當季熱銷和菓子推薦">🌸 當季熱銷推薦</button>
+        <button class="quick-opt-btn" data-question="和菓子與茶席配對秘訣">🍵 點心茶席配對</button>
+        <button class="quick-opt-btn" data-question="饈菓子的四大堅持與精神">📜 品牌四大堅持</button>
+        <button class="quick-opt-btn" data-question="如何購買與配送服務">📦 如何購買/配送</button>
+      </div>
+    </div>
+    
+    <div class="ai-chat-input-area">
+      <input type="text" id="ai-chat-input" placeholder="請輸入您想詢問的和菓子話題..." autocomplete="off">
+      <button id="ai-chat-send" aria-label="發送">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
 
   <!-- JS Code -->
   <script src="app.js"></script>

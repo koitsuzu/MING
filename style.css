@@ -263,7 +263,7 @@ body {
 }
 
 .slide-content {
-  max-width: 600px;
+  max-width: 460px;
   color: #FAFAF8;
   transform: translateY(30px);
   transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
@@ -398,7 +398,7 @@ body {
 
 /* 5. 品牌堅持特選區 (Featured Section) */
 .featured-section {
-  padding: 80px 0;
+  padding: 80px 0 120px 0;
   background-color: var(--color-surface-base);
   position: relative;
 }
@@ -498,8 +498,9 @@ body {
 
 /* 6. 臻品點心坊 (Products Gallery Section) */
 .products-section {
-  padding: 80px 0;
+  padding: 80px 0 120px 0;
   background-color: var(--color-surface-muted);
+  position: relative;
 }
 
 .text-center {
@@ -656,7 +657,7 @@ body {
 
 /* 7. 互動茶席配對遊戲區 */
 .interactive-game-section {
-  padding: 80px 0;
+  padding: 80px 0 120px 0;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -1374,5 +1375,433 @@ body {
   }
   .options-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* 13. 禪意流水波浪分隔線 (Zen Wave Divider) */
+.zen-wave-divider {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  overflow: hidden;
+  line-height: 0;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.zen-wave-divider.bottom-wave {
+  bottom: 0;
+}
+
+.zen-wave-divider.top-wave {
+  top: 0;
+}
+
+.zen-wave-divider svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 100%;
+}
+
+/* 14. 頂級和風模擬結帳彈出視窗 (Wagashi Checkout Modal) */
+.checkout-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.checkout-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(42, 42, 42, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  position: relative;
+  background-color: var(--color-surface-base);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 450px;
+  padding: 40px 32px;
+  box-shadow: var(--shadow-premium);
+  border: 1px solid rgba(140, 45, 56, 0.08);
+  transform: translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  text-align: center;
+  z-index: 2010;
+}
+
+.checkout-modal.active .modal-content {
+  transform: translateY(0);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 28px;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.modal-close-btn:hover {
+  color: var(--color-text-secondary);
+}
+
+.modal-icon-wrapper {
+  margin-bottom: 24px;
+}
+
+.modal-mascot-img {
+  height: 160px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.08));
+  animation: float 4s ease-in-out infinite;
+}
+
+.modal-title {
+  font-size: 1.6rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+}
+
+.modal-text {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.modal-action-btn {
+  width: 100%;
+  padding: 12px 0;
+}
+
+/* =========================================
+   6. AI 智能兔子助理樣式 (AI Rabbit Assistant)
+   ========================================= */
+
+/* 兔子按鈕跳動與氣泡樣式 */
+.ai-toggle {
+  position: relative;
+}
+
+/* 兔子按鈕初次載入跳動動畫 */
+.ai-toggle .rabbit-icon {
+  animation: rabbit-bounce 2.2s ease infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes rabbit-bounce {
+  0% { transform: translateY(0) scaleY(1); }
+  20% { transform: translateY(-8px) scaleY(1.05); }
+  40% { transform: translateY(0) scaleY(0.95); }
+  60% { transform: translateY(-4px) scaleY(1.02); }
+  80% { transform: translateY(0) scaleY(0.98); }
+  100% { transform: translateY(0) scaleY(1); }
+}
+
+/* 提示氣泡 */
+.ai-hint-bubble {
+  position: absolute;
+  top: 140%;
+  right: -25px;
+  background-color: var(--color-surface-strong);
+  color: #FAFAF8;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  animation: hint-pulse 2s infinite ease-in-out;
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.3s ease;
+}
+
+/* 氣泡箭頭 */
+.ai-hint-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  right: 36px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent var(--color-surface-strong) transparent;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.95; }
+  50% { transform: translateY(-5px) scale(1.04); opacity: 1; }
+}
+
+/* 隱藏氣泡（當打開對話窗或滾動時） */
+.ai-hint-bubble.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* AI 對話視窗 */
+.ai-chat-window {
+  position: fixed;
+  top: 85px;
+  right: 20px;
+  width: 380px;
+  height: 520px;
+  background: rgba(250, 250, 248, 0.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  overflow: hidden;
+  transform: translateY(20px) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ai-chat-window.active {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 對話視窗頭部 */
+.ai-chat-header {
+  background: linear-gradient(135deg, rgba(168, 86, 84, 0.15), rgba(168, 86, 84, 0.05));
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(168, 86, 84, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-chat-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #FAFAF8;
+  padding: 3px;
+  border: 1.5px solid var(--color-surface-strong);
+}
+
+.ai-chat-title h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  margin: 0;
+}
+
+.ai-status {
+  font-size: 0.7rem;
+  color: #4CAF50;
+  font-weight: 500;
+  display: block;
+  margin-top: 2px;
+}
+
+.ai-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--color-text-light);
+  transition: color 0.2s;
+  padding: 4px;
+}
+
+.ai-close-btn:hover {
+  color: var(--color-surface-strong);
+}
+
+/* 對話訊息區 */
+.ai-chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+}
+
+.message-content {
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.ai-message {
+  align-self: flex-start;
+}
+
+.ai-message .message-content {
+  background-color: #FAFAF8;
+  color: var(--color-text-dark);
+  border: 1px solid rgba(168, 86, 84, 0.1);
+  border-top-left-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.user-message {
+  align-self: flex-end;
+}
+
+.user-message .message-content {
+  background-color: var(--color-surface-strong);
+  color: #FAFAF8;
+  border-top-right-radius: 4px;
+  box-shadow: 0 4px 12px rgba(168, 86, 84, 0.2);
+}
+
+/* 快捷按鈕區 */
+.quick-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  align-self: flex-start;
+}
+
+.quick-opt-btn {
+  background: rgba(168, 86, 84, 0.06);
+  border: 1px solid rgba(168, 86, 84, 0.15);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: var(--color-surface-strong);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.quick-opt-btn:hover {
+  background: var(--color-surface-strong);
+  color: #FAFAF8;
+  border-color: var(--color-surface-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(168, 86, 84, 0.15);
+}
+
+/* 訊息輸入區 */
+.ai-chat-input-area {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(168, 86, 84, 0.1);
+  display: flex;
+  gap: 10px;
+  background: rgba(250, 250, 248, 0.95);
+}
+
+#ai-chat-input {
+  flex: 1;
+  border: 1px solid rgba(168, 86, 84, 0.2);
+  padding: 10px 16px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #FAFAF8;
+  transition: all 0.2s;
+}
+
+#ai-chat-input:focus {
+  border-color: var(--color-surface-strong);
+  box-shadow: 0 0 0 3px rgba(168, 86, 84, 0.1);
+}
+
+#ai-chat-send {
+  background-color: var(--color-surface-strong);
+  color: #FAFAF8;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(168, 86, 84, 0.2);
+}
+
+#ai-chat-send:hover {
+  transform: scale(1.08);
+  background-color: #934644;
+}
+
+/* 載入中動畫效果 */
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 4px 8px;
+  align-items: center;
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-text-light);
+  border-radius: 50%;
+  animation: typing-bounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+}
+
+/* 行動端適應 */
+@media (max-width: 480px) {
+  .ai-chat-window {
+    top: 80px;
+    right: 4%;
+    left: 4%;
+    width: auto;
+    height: 460px;
   }
 }

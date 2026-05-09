@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductsGallery();
   initInteractiveGame();
   initCartSystem();
+  initAIAssistant();
 });
 
 /* 
@@ -503,14 +504,55 @@ function initCartSystem() {
   // 結帳按鈕提示
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', () => {
-      if (cart.length === 0) {
-        alert('您的茶袋還是空的呢，快去商品區挑選精緻和菓子吧！');
-        return;
-      }
-      alert('「饈菓子」感謝您的支持！已成功為您保留手作訂單名額，客服狐 Bobo 將盡快與您聯繫安排配送。');
+      showCheckoutModal(cart.length > 0);
+    });
+  }
+
+  // 頂級和風模擬結帳彈出視窗 (Wagashi Checkout Modal) 交互邏輯
+  const modal = document.getElementById('checkout-modal');
+  const modalCloseOverlay = document.getElementById('modal-close-overlay');
+  const modalCloseBtnX = document.getElementById('modal-close-btn-x');
+  const modalActionBtn = document.getElementById('modal-action-btn');
+
+  function showCheckoutModal(isSuccess) {
+    const mascot = document.getElementById('modal-mascot');
+    const title = document.getElementById('modal-title');
+    const text = document.getElementById('modal-text');
+    const actionBtn = document.getElementById('modal-action-btn');
+
+    if (isSuccess) {
+      mascot.src = 'image/互動與問答/bo1.png'; // 超開心
+      title.innerText = '訂單謹製提交完成！';
+      text.innerHTML = '「饈菓子」感謝您的支持！已成功為您預留手作珍饈名額，客服狐 <strong>Bobo</strong> 將盡快與您聯繫確認。';
+      actionBtn.innerText = '再逛逛';
+      
+      // 清空購物車
       cart = [];
       updateCartUI();
-      drawer.classList.remove('active');
+    } else {
+      mascot.src = 'image/互動與問答/do1.png'; // 指引
+      title.innerText = '您的茶袋還是空的呢';
+      text.innerText = '快去挑選一些極致美味的手作和菓子，開啟今日的雅緻茶席吧！';
+      actionBtn.innerText = '探尋臻品';
+    }
+
+    modal.classList.add('active');
+    if (drawer) drawer.classList.remove('active');
+  }
+
+  function closeCheckoutModal() {
+    modal.classList.remove('active');
+  }
+
+  if (modalCloseOverlay) modalCloseOverlay.addEventListener('click', closeCheckoutModal);
+  if (modalCloseBtnX) modalCloseBtnX.addEventListener('click', closeCheckoutModal);
+  if (modalActionBtn) {
+    modalActionBtn.addEventListener('click', () => {
+      closeCheckoutModal();
+      if (modalActionBtn.innerText === '探尋臻品') {
+        const prodSec = document.getElementById('products');
+        if (prodSec) prodSec.scrollIntoView({ behavior: 'smooth' });
+      }
     });
   }
 }
@@ -632,4 +674,230 @@ function bindCartItemEvents() {
       updateCartUI();
     });
   });
+}
+
+/* 
+  6. AI 智能兔子助理互動與智能問答系統 (AI Rabbit Assistant System)
+*/
+function initAIAssistant() {
+  const aiBtn = document.getElementById('ai-btn');
+  const chatWindow = document.getElementById('ai-chat-window');
+  const closeBtn = document.getElementById('ai-close-btn');
+  const chatInput = document.getElementById('ai-chat-input');
+  const sendBtn = document.getElementById('ai-chat-send');
+  const chatMessages = document.getElementById('ai-chat-messages');
+  const hintBubble = document.getElementById('ai-hint-bubble');
+  const quickBtns = document.querySelectorAll('.quick-opt-btn');
+
+  if (!aiBtn || !chatWindow) return;
+
+  // 1. 開啟/關閉對話視窗
+  aiBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    chatWindow.classList.toggle('active');
+    
+    // 一旦點擊，隱藏提示氣泡
+    if (hintBubble) {
+      hintBubble.classList.add('hide');
+    }
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      chatWindow.classList.remove('active');
+    });
+  }
+
+  // 點擊視窗外部關閉
+  document.addEventListener('click', (e) => {
+    if (chatWindow.classList.contains('active') && !chatWindow.contains(e.target) && !aiBtn.contains(e.target)) {
+      chatWindow.classList.remove('active');
+    }
+  });
+
+  // 滾動網頁時，也優雅隱藏提示氣泡
+  window.addEventListener('scroll', () => {
+    if (hintBubble && window.scrollY > 100) {
+      hintBubble.classList.add('hide');
+    }
+  }, { passive: true });
+
+  // 2. 智能自動回覆引擎 (NLP Keyword Matching Engine)
+  function getAIResponse(userText) {
+    const text = userText.toLowerCase().trim();
+
+    // 20週年紀念
+    if (text.includes('20') || text.includes('二十') || text.includes('周年') || text.includes('週年')) {
+      return `🎉 饈菓子 20 週年紀念特別企劃：
+      自 2003 年創立以來，我們已與無數饕客共度了 20 年的甜蜜歲月。
+      
+      今年我們特別推出了全新的「20週年櫻綻限定版大福」，融合金箔與櫻花甘露，感謝您一路上對我們的支持！您可以在頂部看板的大圖中一睹它的絕美風采喔！`;
+    }
+
+    // 大福與經典點心
+    if (text.includes('大福') || text.includes('櫻綻') || text.includes('草莓') || text.includes('點心') || text.includes('商品') || text.includes('甜點')) {
+      return `🌸 臻品推薦：
+      1. 【櫻綻大福】($180)：融合當季櫻花瓣與特製生餡，金箔點綴，層次細膩高雅。
+      2. 【草莓大福】($150)：嚴選新鮮大草莓與京都十勝紅豆餡，酸甜適口。
+      
+      您可以在網頁下方的「臻品點心坊」中點擊「加入購物車」進行模擬購買喔！`;
+    }
+
+    // 生菓子與三角棒
+    if (text.includes('生菓子') || text.includes('手工') || text.includes('三角棒') || text.includes('雕刻') || text.includes('藝術') || text.includes('工藝') || text.includes('職人')) {
+      return `✨ 職人代表作：【三角棒手作生菓子】($220)
+      
+      每一顆都是職人運用祖傳三角棒，經由揉、捏、壓、切等數十道工序精細雕刻而成。它將四季的流轉（如春櫻、秋楓、冬雪）具象化，呈現極致的和風禪意。
+      
+      您可以在「職人故事」區塊中，一覽這門傳承數百年的指尖藝術。`;
+    }
+
+    // 葛饅頭
+    if (text.includes('葛') || text.includes('饅頭') || text.includes('五山送火') || text.includes('涼') || text.includes('消暑') || text.includes('夏天')) {
+      return `🍃 涼夏逸品：【五山送火葛饅頭】($160)
+      
+      選用京都頂級葛粉製成半透明外皮，包覆細滑手工豆沙。
+      質地晶瑩剔透、入口即化，帶給您沁人心脾的清爽口感，是夏日茶席上最受歡迎的消暑極品。`;
+    }
+
+    // 禮盒
+    if (text.includes('禮盒') || text.includes('送禮') || text.includes('禮') || text.includes('伴手禮')) {
+      return `🎁 精緻送禮首選：【四季和菓子禮盒】($880)
+      
+      內含本店最暢銷的櫻綻大福、手工生菓子與葛饅頭，並採用日本進口友禪紙手工包裝。
+      精緻大氣，呈現最高貴優雅的饈菓子美學，是致贈長輩或貴賓的完美首選。`;
+    }
+
+    // 茶席配對 / 搭配
+    if (text.includes('茶') || text.includes('搭配') || text.includes('配對') || text.includes('茶席') || text.includes('抹茶') || text.includes('焙茶') || text.includes('煎茶') || text.includes('玄米茶')) {
+      return `🍵 饈菓子獨家茶席搭配秘訣：
+      1. 【大福類】建議搭配「焙茶」或「玄米茶」，能完美帶出豆沙的純粹麥香。
+      2. 【生菓子】是「宇治煎茶」或「日本濃抹茶」的絕配，甘苦交織、一期一會。
+      3. 【葛饅頭】適合佐以「冷泡煎茶」，入口清涼回甘。
+      
+      網頁中段設有「茶席配對」互動遊戲，歡迎您親自配對，還可以獲得推薦的專屬茶譜喔！`;
+    }
+
+    // 四大堅持 / 品牌精神 / 理念
+    if (text.includes('堅持') || text.includes('四大') || text.includes('精神') || text.includes('理念') || text.includes('品牌') || text.includes('特色') || text.includes('關於')) {
+      return `📜 饈菓子的四大品牌堅持：
+      1. 【純天然食材】：絕無人工色素，用植物天然原色演繹極致色彩。
+      2. 【當日現做】：每日凌晨手工限量製作，封存最鮮甜的一刻。
+      3. 【極致禪意】：將俳句、和歌與庭園山水融入造型，體現日式生活哲學。
+      4. 【一期一會】：每一次與您的相遇，我們都傾注一生的心意，為您呈現完美之作。`;
+    }
+
+    // 購買 / 配送 / 運費 / 購物車 / 結帳
+    if (text.includes('買') || text.includes('購買') || text.includes('配送') || text.includes('運費') || text.includes('購物') || text.includes('結帳') || text.includes('加入購物車')) {
+      return `📦 購物與配送說明：
+      1. 【如何購買】：在「臻品點心坊」中，點擊任何產品下的「加入購物車」。
+      2. 【查看商品】：點擊右上角兔子助理旁的「購物袋」即可展開清單。
+      3. 【配送服務】：滿 $1,000 元即可享受低溫宅配免運費服務，當日製作、隔日低溫新鮮送達。
+      4. 【結帳流程】：在購物車清單中點擊「模擬結帳」即可體驗專屬的精緻和風結帳體驗！`;
+    }
+
+    // 基礎問候
+    if (text.includes('哈囉') || text.includes('你好') || text.includes('您好') || text.includes('hi') || text.includes('hello') || text.includes('嗨') || text.includes('在嗎')) {
+      return `🌸 您好！我是饈菓子的兔子助理。很高興與您相遇！
+      
+      不論您想了解臻品和菓子、茶席配對秘訣，還是我們的職人故事，我都能為您解答。
+      請問今天想聊聊哪一樣臻品呢？`;
+    }
+
+    // 默認 Fallback
+    return `🌸 謝謝您的提問！關於您提到的話題，我是專屬饈菓子的智能問答助手，主要為您解答這個網站內部的和菓子相關知識。
+    
+    您可以試著這樣詢問我：
+    - 「櫻綻大福特色是什麼？」
+    - 「我想了解三角棒生菓子」
+    - 「和菓子應該搭配什麼茶？」
+    - 「你們有什麼禮盒或品牌堅持嗎？」
+    
+    您也可以直接點擊對話框中的快捷按鈕，讓我為您解答喔！`;
+  }
+
+  // 3. 發送訊息邏輯
+  function sendMessage(text) {
+    if (!text.trim()) return;
+
+    // A. 添加使用者訊息
+    const userMsgDiv = document.createElement('div');
+    userMsgDiv.className = 'message user-message';
+    userMsgDiv.innerHTML = `<div class="message-content">${escapeHTML(text)}</div>`;
+    chatMessages.appendChild(userMsgDiv);
+    
+    chatInput.value = '';
+    scrollToBottom();
+
+    // B. 顯示 AI 輸入中動畫 (Typing Indicator)
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message ai-message typing-indicator-wrapper';
+    typingDiv.innerHTML = `
+      <div class="message-content">
+        <div class="typing-indicator">
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+        </div>
+      </div>
+    `;
+    chatMessages.appendChild(typingDiv);
+    scrollToBottom();
+
+    // C. 模擬延遲自動回覆
+    setTimeout(() => {
+      // 移除 typing indicator
+      typingDiv.remove();
+
+      // 獲取並添加 AI 回覆
+      const replyText = getAIResponse(text);
+      const aiMsgDiv = document.createElement('div');
+      aiMsgDiv.className = 'message ai-message animate-fade-in';
+      aiMsgDiv.innerHTML = `<div class="message-content">${replyText}</div>`;
+      chatMessages.appendChild(aiMsgDiv);
+      
+      scrollToBottom();
+    }, 800 + Math.random() * 600); // 隨機延遲 0.8s - 1.4s 顯得自然
+  }
+
+  // 發送按鈕點擊
+  sendBtn.addEventListener('click', () => {
+    sendMessage(chatInput.value);
+  });
+
+  // Enter 鍵發送
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage(chatInput.value);
+    }
+  });
+
+  // 4. 快捷按鈕點擊
+  quickBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const question = btn.getAttribute('data-question');
+      if (question) {
+        sendMessage(question);
+      }
+    });
+  });
+
+  // 輔助函式：防 XSS 轉義
+  function escapeHTML(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // 輔助函式：平滑滾動至底
+  function scrollToBottom() {
+    chatMessages.scrollTo({
+      top: chatMessages.scrollHeight,
+      behavior: 'smooth'
+    });
+  }
 }
