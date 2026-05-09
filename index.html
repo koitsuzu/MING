@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>饈菓子｜頂級手作和菓子、日式四季點心與禮盒專賣店</title>
+  <meta name="description" content="饈菓子（Shiu Guoji）傳承日式手作工藝，精選時令食材，為您獻上生菓子、羊羹、大福與糰子等精緻點心。珍饈美饌，四季流轉，親臨一場極致的和風禪意美學饗宴。">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- CSS Link -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="image/介面與圖示/logo.ico" type="image/x-icon">
+</head>
+<body>
+
+  <!-- 櫻花漂落背景容器 -->
+  <div id="sakura-container"></div>
+
+  <!-- 頂部精緻導航欄 -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="#" class="logo-link" id="nav-logo">
+        <img src="image/介面與圖示/logo.png" alt="饈菓子 品牌標誌" class="logo-img">
+        <span class="brand-text">饈菓子</span>
+      </a>
+
+      <nav class="nav-menu" id="nav-menu">
+        <a href="#hero" class="nav-item active">首頁看板</a>
+        <a href="#about" class="nav-item">職人故事</a>
+        <a href="#products" class="nav-item">臻品點心</a>
+        <a href="#interactive-game" class="nav-item">茶席配對</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-btn search-toggle" aria-label="搜尋" id="search-btn">
+          <img src="image/介面與圖示/search2.png" alt="搜尋鈕" class="nav-icon">
+        </button>
+        <button class="nav-btn bag-toggle" aria-label="購物袋" id="cart-btn">
+          <img src="image/介面與圖示/bag.png" alt="購物袋鈕" class="nav-icon">
+          <span class="cart-count">0</span>
+        </button>
+        <button class="menu-toggle" id="menu-toggle" aria-label="切換選單">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 全螢幕輪播看板 (Hero Carousel) -->
+  <section class="hero-section" id="hero">
+    <div class="carousel-container">
+      <!-- 輪播投影片 1 -->
+      <div class="carousel-slide active" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('image/品牌與背景/輪播_20週年紀念.jpg');">
+        <div class="slide-content">
+          <span class="slide-subtitle">二〇週年・感恩限定</span>
+          <h1 class="slide-title">手作傳承<br>一期一會的極致溫度</h1>
+          <p class="slide-desc">揉合二十載光陰手藝，將時令大地的豐饒化為指尖的藝術品，溫潤每一次舌尖的相遇。</p>
+          <a href="#products" class="btn-primary">探尋經典</a>
+        </div>
+      </div>
+      <!-- 輪播投影片 2 -->
+      <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('image/品牌與背景/輪播_大福花皿.jpg');">
+        <div class="slide-content">
+          <span class="slide-subtitle">時令定番・花皿盛宴</span>
+          <h1 class="slide-title">櫻綻大福<br>粉雪輕裹的和風蜜意</h1>
+          <p class="slide-desc">嚴選頂級十勝紅豆餡，外裹如羽二重織般輕柔Q彈的冰皮，配上當季鮮果，在精緻花皿上徐徐綻放。</p>
+          <a href="#products" class="btn-primary" data-category="daifuku">品嚐時令</a>
+        </div>
+      </div>
+      <!-- 輪播投影片 3 -->
+      <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('image/品牌與背景/輪播_職人工藝.jpg');">
+        <div class="slide-content">
+          <span class="slide-subtitle">極致美學・職人工藝</span>
+          <h1 class="slide-title">生菓子藝術<br>指尖雕琢的四季流轉</h1>
+          <p class="slide-desc">每顆生菓子皆由職人使用三角棒逐一雕琢而成，刻劃出春櫻、夏綠、秋楓、冬雪的詩意景致。</p>
+          <a href="#products" class="btn-primary" data-category="namagashi">預約限量</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 輪播切換鈕 -->
+    <button class="carousel-nav prev" id="prev-slide">
+      <img src="image/介面與圖示/lookL.png" alt="前一張" class="arrow-icon">
+    </button>
+    <button class="carousel-nav next" id="next-slide">
+      <img src="image/介面與圖示/lookR.png" alt="後一張" class="arrow-icon">
+    </button>
+
+    <!-- 輪播指示點 -->
+    <div class="carousel-dots" id="carousel-dots">
+      <span class="dot active" data-index="0"></span>
+      <span class="dot" data-index="1"></span>
+      <span class="dot" data-index="2"></span>
+    </div>
+
+    <!-- 裝飾邊角花卉 -->
+    <img src="image/背景與裝飾/flower1.png" alt="和風裝飾花" class="corner-flower left">
+    <img src="image/背景與裝飾/flower2.png" alt="和風裝飾花" class="corner-flower right">
+  </section>
+
+  <!-- 品牌精選推薦區 (Featured Badges) -->
+  <section class="featured-section">
+    <div class="section-decor"></div>
+    <div class="container">
+      <div class="section-header">
+        <img src="image/推薦與精選/best.png" alt="時令推薦" class="featured-title-img">
+        <h2 class="section-title">饈菓子・四大堅持</h2>
+        <p class="section-subtitle">每一品，皆承載著對自然的敬畏與極致手藝的講究</p>
+      </div>
+
+      <div class="badges-grid">
+        <div class="badge-card">
+          <div class="badge-img-wrapper">
+            <img src="image/推薦與精選/best1.png" alt="職人手作標章" class="badge-img">
+          </div>
+          <h3>純手工揉製</h3>
+          <p>職人手心溫度成型，每一顆皆是獨一無二的四季工藝品。</p>
+        </div>
+        <div class="badge-card">
+          <div class="badge-img-wrapper">
+            <img src="image/推薦與精選/best2.png" alt="無添加標章" class="badge-img">
+          </div>
+          <h3>天然原物料</h3>
+          <p>嚴選日本進口特選白豆沙與在地天然食材，無人工化學添加。</p>
+        </div>
+        <div class="badge-card">
+          <div class="badge-img-wrapper">
+            <img src="image/推薦與精選/best3.png" alt="當季限定標章" class="badge-img">
+          </div>
+          <h3>時令定番</h3>
+          <p>順應二十四節氣遞變，推出當季最具代表性的季節限定點心。</p>
+        </div>
+        <div class="badge-card">
+          <div class="badge-img-wrapper">
+            <img src="image/推薦與精選/best4.png" alt="美學包裝標章" class="badge-img">
+          </div>
+          <h3>極致禪意包裝</h3>
+          <p>精心設計的和紙竹籠包裝，完美展現優雅尊貴的送禮心意。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 臻品點心坊 (Product Filter Gallery) -->
+  <section class="products-section" id="products">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2 class="section-title font-serif">臻品點心坊</h2>
+        <p class="section-subtitle">品味墨香與豆甜的精緻交織</p>
+      </div>
+
+      <!-- 商品分類篩選按鈕 -->
+      <div class="filter-buttons" id="filter-container">
+        <button class="filter-btn active" data-filter="all">全部臻品</button>
+        <button class="filter-btn" data-filter="namagashi">生菓子系列</button>
+        <button class="filter-btn" data-filter="yokan">羊羹系列</button>
+        <button class="filter-btn" data-filter="daifuku">大福系列</button>
+        <button class="filter-btn" data-filter="dango">糰子系列</button>
+        <button class="filter-btn" data-filter="classic">經典和菓子</button>
+      </div>
+
+      <!-- 商品卡片列表區 -->
+      <div class="products-grid" id="products-grid">
+        <!-- 商品卡片將透過 JS 動態渲染以載入對應的 /image 下的所有真實產品，確保展示極致豐富度 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 互動茶席配對遊戲專區 (Interactive Mascot Q&A) -->
+  <section class="interactive-game-section" id="interactive-game" style="background-image: linear-gradient(rgba(245, 242, 235, 0.95), rgba(245, 242, 235, 0.95)), url('image/背景與裝飾/bg1.jpg');">
+    <div class="container">
+      <div class="game-wrapper">
+        <div class="mascot-column">
+          <div class="mascot-bubble">
+            <p id="mascot-text">「歡迎光臨饈菓子！我是店小狐 Bobo。點選下方選項，讓我為您推薦今日最契合您心情的精緻點心與茶席搭配吧！」</p>
+          </div>
+          <img src="image/互動與問答/bo1.png" alt="饈菓子吉祥物 Bobo" class="mascot-img" id="mascot-character">
+        </div>
+
+        <div class="quiz-column" id="quiz-card">
+          <h2 class="quiz-title font-serif">小狐狸的茶道心靈配對</h2>
+          <p class="quiz-intro">順應您此時此刻的直覺，尋找最相融的和風雅緻。</p>
+
+          <div class="quiz-step active" data-step="1">
+            <h4 class="question">1. 您此時此刻的心境更接近哪一種四季氛圍？</h4>
+            <div class="options-grid">
+              <button class="option-btn" data-answer="spring" data-next="2">
+                <span class="option-icon">🌸</span> 櫻綻溫潤的爛漫春日
+              </button>
+              <button class="option-btn" data-answer="summer" data-next="2">
+                <span class="option-icon">🍃</span> 翠竹幽谷的清涼夏夜
+              </button>
+              <button class="option-btn" data-answer="autumn" data-next="2">
+                <span class="option-icon">🍁</span> 栗金楓紅的豐饒秋意
+              </button>
+              <button class="option-btn" data-answer="winter" data-next="2">
+                <span class="option-icon">❄️</span> 粉雪凝脂的靜謐冬雪
+              </button>
+            </div>
+          </div>
+
+          <div class="quiz-step" data-step="2">
+            <h4 class="question">2. 請問您今天準備搭配哪種茗茶一同品茗？</h4>
+            <div class="options-grid">
+              <button class="option-btn" data-answer="matcha" data-next="result">
+                <span class="option-icon"><img src="image/推薦與精選/q1.png" alt="濃郁抹茶"></span> 濃郁回甘的宇治抹茶
+              </button>
+              <button class="option-btn" data-answer="sencha" data-next="result">
+                <span class="option-icon"><img src="image/推薦與精選/q2.png" alt="清雅煎茶"></span> 香氣清雅的靜岡煎茶
+              </button>
+              <button class="option-btn" data-answer="houjicha" data-next="result">
+                <span class="option-icon"><img src="image/推薦與精選/q3.png" alt="焙茶"></span> 焙火溫潤的京都焙茶
+              </button>
+              <button class="option-btn" data-answer="oolong" data-next="result">
+                <span class="option-icon"><img src="image/推薦與精選/q4.png" alt="烏龍茶"></span> 焙韻綿長的阿里山烏龍
+              </button>
+            </div>
+          </div>
+
+          <div class="quiz-step" id="quiz-result">
+            <div class="result-celebration">
+              <img src="image/推薦與精選/best5.png" alt="精選標章" class="celebration-badge">
+              <h4 class="result-title font-serif">Bobo 為您推薦的「本日極致茶席」</h4>
+            </div>
+            
+            <div id="recommended-product-display">
+              <!-- JS 動態產生契合結果的推薦和菓子與茶飲 -->
+            </div>
+
+            <div class="result-actions">
+              <button class="btn-primary" id="add-recommended-to-cart">將此推薦組合加入購物袋</button>
+              <button class="btn-secondary" id="restart-quiz">重新測驗</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 品牌職人故事專區 (About Section) -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-img-group">
+          <div class="img-frame frame-primary">
+            <img src="image/品牌與背景/品牌形象_和菓子茶席.png" alt="和菓子精緻茶席展示" class="about-img main-about-img">
+          </div>
+          <div class="img-frame frame-secondary">
+            <img src="image/品牌與背景/品牌形象_職人手作.jpg" alt="職人手刻和菓子" class="about-img sub-about-img">
+          </div>
+        </div>
+        <div class="about-text-column">
+          <span class="brand-badge">關於饈菓子・手作溫度</span>
+          <h2 class="about-title font-serif">將四季瞬息之美，<br>凝煉於掌心溫潤。</h2>
+          <p class="about-desc">
+            「饈」意指最尊貴珍稀的珍饈美味，亦寄託了我們對每一枚菓子的敬意。
+            在「饈菓子」的工坊裡，我們尊崇自然四季節令。從春季粉嫩多汁的草莓大福、夏季晶瑩剔透消除暑意的羊羹、秋季豐饒甘甜的栗子點心，到冬季如粉雪輕裹的和菓子，每一枚皆是職人傾注心魂，歷經多道繁複手工揉捏、壓紋、塑型而成。
+          </p>
+          <p class="about-desc">
+            我們堅持不添加任何化學色素防腐劑，採用日本傳統精製白豆沙與頂級葛粉，完美呈現天然食材細膩的沙感與彈性。
+            一茶、一菓子，在喧囂的世界裡，為您安放一片沉靜優雅的和風一隅。
+          </p>
+          <div class="about-signature">
+            <img src="image/品牌與背景/品牌招牌_梅花.jpg" alt="梅花標誌" class="sig-badge">
+            <div>
+              <span class="sig-name">饈菓子 職人團隊</span>
+              <span class="sig-title">謹製呈獻</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 購物袋側邊欄 (Cart Drawer) -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-panel">
+      <div class="cart-header">
+        <h3 class="font-serif">您的臻品茶袋</h3>
+        <button class="cart-close" id="cart-close-btn">&times;</button>
+      </div>
+
+      <div class="cart-items" id="cart-items-container">
+        <!-- 購物袋品項動態產生 -->
+        <div class="cart-empty-state" id="cart-empty-message">
+          <img src="image/互動與問答/bo2.png" alt="空購物袋吉祥物" class="empty-cart-mascot">
+          <p>茶袋目前是空的呢...<br>快去挑選一些精緻點心吧！</p>
+        </div>
+      </div>
+
+      <div class="cart-footer">
+        <div class="cart-subtotal">
+          <span>小計：</span>
+          <span class="subtotal-amount">NT$ 0</span>
+        </div>
+        <div class="cart-shipping-notice">
+          <img src="image/介面與圖示/car.png" alt="配送車" class="shipping-icon">
+          <span>消費滿 NT$ 1,500 即享黑貓低溫宅配免運費</span>
+        </div>
+        <button class="btn-checkout" id="checkout-btn-cta">
+          <img src="image/介面與圖示/checkout.png" alt="結帳" class="checkout-icon">
+          <span>前往結帳 / 確認預訂</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 常駐右下角小狐狸客服 (Mascot Widget) -->
+  <div class="mascot-widget" id="mascot-widget">
+    <img src="image/互動與問答/bobo.png" alt="Bobo 側邊引導" class="widget-img">
+    <span class="widget-tooltip">茶道配對！</span>
+  </div>
+
+  <!-- 頁尾資訊區 -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand-column">
+          <div class="footer-logo">
+            <img src="image/介面與圖示/logo.png" alt="饈菓子" class="footer-logo-img">
+            <span class="font-serif">饈菓子</span>
+          </div>
+          <p class="footer-brand-desc">
+            融匯極致工藝，傳遞和風美學。<br>
+            饈菓子將四季流轉凝煉於指尖，提供您最尊貴的手作點心體驗。
+          </p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook"><img src="image/介面與圖示/fb.png" alt="FB" class="social-icon"></a>
+            <a href="#" aria-label="Instagram"><img src="image/介面與圖示/ig.png" alt="IG" class="social-icon"></a>
+            <a href="#" aria-label="Line"><img src="image/介面與圖示/em.png" alt="Line" class="social-icon"></a>
+          </div>
+        </div>
+
+        <div class="footer-links-column">
+          <h4 class="font-serif">臻品系列</h4>
+          <ul>
+            <li><a href="#products" class="footer-category-link" data-category="namagashi">生菓子系列</a></li>
+            <li><a href="#products" class="footer-category-link" data-category="yokan">羊羹系列</a></li>
+            <li><a href="#products" class="footer-category-link" data-category="daifuku">大福系列</a></li>
+            <li><a href="#products" class="footer-category-link" data-category="dango">糰子系列</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-column">
+          <h4 class="font-serif">服務與導覽</h4>
+          <ul>
+            <li><a href="#about">職人精神</a></li>
+            <li><a href="#interactive-game">茶席心靈配對</a></li>
+            <li><a href="#">低溫配送須知</a></li>
+            <li><a href="#">大宗禮盒訂購</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-contact-column">
+          <h4 class="font-serif">聯絡饈菓子</h4>
+          <p>地址：台北市大安區和風禪意路 88 號 1 樓</p>
+          <p>電話：02-2735-8899</p>
+          <p>營業時間：週一至週日 11:00 - 19:30 (每週二店休)</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 饈菓子 Shiu Guoji Wagashi Studio. 版權所有。本站所有產品影像均實體提供。</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS Code -->
+  <script src="app.js"></script>
+</body>
+</html>
