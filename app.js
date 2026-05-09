@@ -680,6 +680,9 @@ function bindCartItemEvents() {
   6. AI 智能兔子助理互動與智能問答系統 (AI Rabbit Assistant System)
 */
 function initAIAssistant() {
+  // 💡 在下方放入您的真實 Gemini API 金鑰，即可啟用 Gemini 2.5 實體大語言模型進行對話！若留空則會自動流暢降級為本地高智能關鍵字問答引擎。
+  const GEMINI_API_KEY = 'AIzaSyDUbDwXinK1TCtDJZX3XLNDXRjb_J7KoAw';
+
   const aiBtn = document.getElementById('ai-btn');
   const chatWindow = document.getElementById('ai-chat-window');
   const closeBtn = document.getElementById('ai-close-btn');
@@ -797,6 +800,16 @@ function initAIAssistant() {
       4. 【結帳流程】：在購物車清單中點擊「模擬結帳」即可體驗專屬的精緻和風結帳體驗！`;
     }
 
+    // 聯絡方式 / 地址 / 電話 / 營業時間 / 店址 / 位置
+    if (text.includes('聯絡') || text.includes('地址') || text.includes('電話') || text.includes('時間') || text.includes('營業') || text.includes('店休') || text.includes('地圖') || text.includes('位置') || text.includes('在哪') || text.includes('客服')) {
+      return `📍 饈菓子 聯絡資訊與營業時間：
+      - 【店面地址】：台北市大安區和風禪意路 88 號 1 樓
+      - 【聯絡電話】：02-2735-8899
+      - 【營業時間】：週一至週日 11:00 - 19:30 (每週二店休，請注意不要白跑一趟喔！)
+      
+      歡迎您在營業時間撥打電話諮詢預購，或前來實體店面感受最極致的和風美學體驗喔！🌸`;
+    }
+
     // 基礎問候
     if (text.includes('哈囉') || text.includes('你好') || text.includes('您好') || text.includes('hi') || text.includes('hello') || text.includes('嗨') || text.includes('在嗎')) {
       return `🌸 您好！我是饈菓子的兔子助理。很高興與您相遇！
@@ -809,6 +822,7 @@ function initAIAssistant() {
     return `🌸 謝謝您的提問！關於您提到的話題，我是專屬饈菓子的智能問答助手，主要為您解答這個網站內部的和菓子相關知識。
     
     您可以試著這樣詢問我：
+    - 「你們在哪裡？電話是多少？」
     - 「櫻綻大福特色是什麼？」
     - 「我想了解三角棒生菓子」
     - 「和菓子應該搭配什麼茶？」
@@ -817,8 +831,92 @@ function initAIAssistant() {
     您也可以直接點擊下方常駐的快捷按鈕（例如：🌸 當季熱銷推薦、🍵 點心茶席配對），讓我為您解答喔！`;
   }
 
-  // 3. 發送訊息邏輯
-  function sendMessage(text) {
+  // 2.5 實體 Gemini 大語言模型 API 調用核心
+  async function fetchGeminiResponse(userPrompt) {
+    const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
+    const systemInstruction = `你是一位親切、優雅、精通日本禪意美學的『饈菓子 (Shiu Guoji)』頂級手作和菓子專賣店兔子智能助理。
+請根據以下提供的網頁完整知識庫，用可愛、親切且富有禪意的口吻來回答顧客的問題。
+你可以適度使用符合和風意境的表情符號（如：🌸、🍵、🍡、🎁、📍、⏰）。
+
+【饈菓子 品牌核心資訊與知識庫】：
+1. 品牌定位與四大堅持：
+   - 【純天然食材】：絕無人工色素，用天然植物原色演繹極致色彩，健康無負擔。
+   - 【當日現做】：每日凌晨手工限量製作，封存最鮮甜美味的一刻。
+   - 【極致禪意】：將日式俳句、和歌、庭園枯山水融入菓子造型與意境，體現極致日式生活哲學。
+   - 【一期一會】：珍惜每一次與顧客的相遇，傾注職人一生的心意。
+2. 臻品點心與價格：
+   - 【櫻綻大福】($180)：金箔點綴，融合當季櫻花瓣與特製生餡，精緻奢華，層次細雅。
+   - 【草莓大福】($150)：新鮮嚴選整顆大草莓搭配京都十勝紅豆餡，酸甜絕配，Q彈多汁。
+   - 【三角棒手作生菓子】($220)：職人代表作，運用傳承數百年的祖傳「三角棒」木雕工具，經揉、捏、壓、切等數十道工序，手工雕刻出四季流轉（如春櫻、秋楓、冬雪）的立體美學。
+   - 【五山送火葛饅頭】($160)：涼夏逸品，選用京都頂級葛粉製成半透明冰涼外皮，包覆滑細豆沙，質地晶營，入口即化。
+   - 【四季和菓子禮盒】($880)：精緻送禮首選，內含櫻綻大福、手工生菓子與葛饅頭，並用日本進口友禪紙手工包裝，尊貴典雅。
+3. 聯絡資訊與營業時間：
+   - 📍 【店面地址】：台北市大安區和風禪意路 88 號 1 樓
+   - 📞 【聯絡電話】：02-2735-8899
+   - ⏰ 【營業時間】：週一至週日 11:00 - 19:30 (每週二為店休日，請注意不要白跑一趟喔！)
+4. 購物車與配送物流：
+   - 【如何購買】：在網頁下方的「臻品點心坊」中點擊「加入購物車」即可。點擊右上角的購物袋圖案可展開清單。
+   - 【免運優惠】：全台低溫配送，單筆訂單滿 $1,000 元即享免運費（未滿 $1,000 元運費為 $150 元）。
+   - 【模擬結帳】：點擊購物車清單底部的「模擬結帳」按鈕，可以體驗專屬的精緻和風結帳成功慶祝流程！
+5. 茶席搭配秘訣：
+   - 大福類：建議搭配帶有純粹麥香的「焙茶」或「玄米茶」。
+   - 手工生菓子：建議搭配甘苦交織、最純正的「宇治煎茶」或「日本濃抹茶」。
+   - 葛饅頭：最適合佐以清涼回甘的「冷泡煎茶」。
+
+【回答規範與限制】：
+- 如果顧客問及聯絡資訊、地址、電話、營業時間，請務必精確給予上述知識庫中的正確資訊。
+- 請注意！你主要只能回答與「饈菓子」和菓子專賣店、網站服務以及和菓子文化相關的話題。
+- 如果顧客詢問與本網站、饈菓子完全無關的政治、八卦或一般世俗瑣事，請委婉溫柔地婉拒回答，並引導他們品嚐和菓子。
+- 回答要精簡、條理分明，避免過長的段落。`;
+
+    const response = await fetch(apiURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: userPrompt }]
+          }
+        ],
+        systemInstruction: {
+          parts: [{ text: systemInstruction }]
+        },
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 800
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.candidates[0].content.parts[0].text;
+  }
+
+  // 輔助函式：將 Markdown 轉為 HTML 顯示 (支援粗體與換行)
+  function formatMarkdownToHTML(text) {
+    if (!text) return '';
+    let html = escapeHTML(text);
+    // 粗體 **text** -> <strong>text</strong>
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    // 斜體 *text* -> <em>text</em>
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    // 點清單 - text -> • text
+    html = html.replace(/^\s*-\s+(.*?)$/gm, '• $1');
+    // 換行符轉成 <br>
+    html = html.replace(/\n/g, '<br>');
+    return html;
+  }
+
+  // 3. 發送訊息邏輯 (支援異步 Gemini API & 本地備份)
+  async function sendMessage(text) {
     if (!text.trim()) return;
 
     // A. 添加使用者訊息
@@ -845,20 +943,36 @@ function initAIAssistant() {
     chatMessages.appendChild(typingDiv);
     scrollToBottom();
 
-    // C. 模擬延遲自動回覆
-    setTimeout(() => {
+    // C. 獲取回覆 (優先使用實體 Gemini 2.5 API，若無 API Key 則平滑降級為本地高智能關鍵字引擎)
+    try {
+      let replyText = '';
+      if (GEMINI_API_KEY && GEMINI_API_KEY !== 'YOUR_GEMINI_API_KEY_HERE') {
+        replyText = await fetchGeminiResponse(text);
+      } else {
+        // 模擬短暫打字延遲後使用本地關鍵字回覆
+        await new Promise(resolve => setTimeout(resolve, 600 + Math.random() * 400));
+        replyText = getAIResponse(text);
+      }
+
       // 移除 typing indicator
       typingDiv.remove();
 
-      // 獲取並添加 AI 回覆
-      const replyText = getAIResponse(text);
       const aiMsgDiv = document.createElement('div');
       aiMsgDiv.className = 'message ai-message animate-fade-in';
-      aiMsgDiv.innerHTML = `<div class="message-content">${replyText}</div>`;
+      aiMsgDiv.innerHTML = `<div class="message-content">${formatMarkdownToHTML(replyText)}</div>`;
       chatMessages.appendChild(aiMsgDiv);
       
       scrollToBottom();
-    }, 800 + Math.random() * 600); // 隨機延遲 0.8s - 1.4s 顯得自然
+    } catch (error) {
+      console.error('AI Response Error:', error);
+      typingDiv.remove();
+      
+      const errorMsgDiv = document.createElement('div');
+      errorMsgDiv.className = 'message ai-message animate-fade-in';
+      errorMsgDiv.innerHTML = `<div class="message-content">🌸 哎呀，兔子助理的思緒稍微塞車了（連線異常）。您可以先看看底下常駐的快捷按鈕，或稍後再試試看喔！</div>`;
+      chatMessages.appendChild(errorMsgDiv);
+      scrollToBottom();
+    }
   }
 
   // 發送按鈕點擊
