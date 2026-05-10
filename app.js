@@ -426,9 +426,7 @@ function initProductsGallery() {
       card.classList.add('product-card');
       card.setAttribute('data-id', p.id);
       
-      const badgeHTML = p.badge 
-        ? `<img src="${p.badge}" alt="時令推薦" class="card-badge">` 
-        : '';
+      const badgeHTML = ''; // 強制移除不需要的右上角小圖
 
       card.innerHTML = `
         <div class="product-img-wrapper">

@@ -1508,7 +1508,33 @@ body {
 
 /* 兔子按鈕跳動與氣泡樣式 */
 .ai-toggle {
-  position: relative;
+  position: fixed !important;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1500; /* 確保凌駕於普通元素之上，但低於聚光燈遮罩？ */
+  width: 65px;
+  height: 65px;
+  background-color: #FAFAF8;
+  border: 2px solid var(--color-primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(140, 45, 56, 0.25);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ai-toggle:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 15px 30px rgba(140, 45, 56, 0.35);
+  border-color: var(--color-accent-red);
+}
+
+.ai-toggle .rabbit-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 /* 兔子按鈕初次載入跳動動畫 */
@@ -1526,34 +1552,34 @@ body {
   100% { transform: translateY(0) scaleY(1); }
 }
 
-/* 提示氣泡 */
+/* 提示氣泡 - 改為由下而上浮現於兔子上方 */
 .ai-hint-bubble {
   position: absolute;
-  top: 140%;
-  right: -25px;
+  bottom: 115%; /* 改為下方定位，推送到按鈕上方 */
+  right: 0;
   background-color: var(--color-surface-strong);
   color: #FAFAF8;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 500;
   white-space: nowrap;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-  animation: hint-pulse 2s infinite ease-in-out;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  animation: hint-pulse 2.5s infinite ease-in-out;
   pointer-events: none;
   z-index: 100;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* 氣泡箭頭 */
+/* 氣泡箭頭 - 翻轉向下指向兔子 */
 .ai-hint-bubble::after {
   content: '';
   position: absolute;
-  bottom: 100%;
-  right: 36px;
-  border-width: 6px;
+  top: 100%; /* 指向氣泡下方 */
+  right: 25px;
+  border-width: 8px;
   border-style: solid;
-  border-color: transparent transparent var(--color-surface-strong) transparent;
+  border-color: var(--color-surface-strong) transparent transparent transparent; /* 倒過來的三角形 */
 }
 
 @keyframes hint-pulse {
@@ -1570,8 +1596,8 @@ body {
 /* AI 對話視窗 */
 .ai-chat-window {
   position: fixed;
-  top: 85px;
-  right: 20px;
+  bottom: 110px; /* 從下方升起，浮於兔子按鈕上方 */
+  right: 30px;
   width: 380px;
   height: 520px;
   background: rgba(250, 250, 248, 0.88);
@@ -1582,7 +1608,7 @@ body {
   box-shadow: var(--shadow-xl);
   display: flex;
   flex-direction: column;
-  z-index: 999;
+  z-index: 2000; /* 提高層級，保證在所有介面之上 */
   overflow: hidden;
   transform: translateY(20px) scale(0.95);
   opacity: 0;
