@@ -15,10 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initSpotlightTutorial();
 });
 
-// 全局聚光燈管理變數
+// 全局聚光燈與導覽管理變數
 let spotlightTimeout;
+let currentTourTargets = [];
+let currentTourIndex = 0;
 
 function initSpotlightTutorial() {
+  // 1. 背景帷幕層
   const overlay = document.createElement('div');
   overlay.className = 'spotlight-overlay';
   overlay.id = 'spotlight-overlay';
@@ -27,47 +30,112 @@ function initSpotlightTutorial() {
   overlay.addEventListener('click', () => {
     window.clearSpotlight();
   });
+
+  // 2. 產品導覽浮動控制條 (✨ 新增核心組件)
+  const controller = document.createElement('div');
+  controller.className = 'tour-controller';
+  controller.id = 'tour-controller';
+  controller.innerHTML = `
+    <div class="tour-status" id="tour-status">點心巡禮中</div>
+    <button class="tour-nav-btn" id="tour-prev-btn">← 上一個</button>
+    <button class="tour-nav-btn primary" id="tour-next-btn">下一個 ➔</button>
+    <button class="tour-close-btn" id="tour-close-btn" title="結束導覽">×</button>
+  `;
+  document.body.appendChild(controller);
+
+  // 綁定按鈕交互邏輯
+  document.getElementById('tour-prev-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (currentTourIndex > 0) window.runTourStep(currentTourIndex - 1);
+  });
+  document.getElementById('tour-next-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (currentTourIndex < currentTourTargets.length - 1) {
+      window.runTourStep(currentTourIndex + 1);
+    } else {
+      window.clearSpotlight(); // 最後一個，點擊即結束
+    }
+  });
+  document.getElementById('tour-close-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.clearSpotlight();
+  });
 }
 
-// 暴露到全域，方便 AI Assistant 呼叫
+// 暴露到全域：核心單步導覽邏輯渲染器
+window.runTourStep = function(index) {
+  if (!currentTourTargets.length || index < 0 || index >= currentTourTargets.length) return;
+  
+  currentTourIndex = index;
+  const overlay = document.getElementById('spotlight-overlay');
+  const controller = document.getElementById('tour-controller');
+  const currentTarget = currentTourTargets[index];
+
+  // 1. 清除舊定時器與視覺狀態（手動中斷自動機制）
+  clearTimeout(spotlightTimeout);
+  document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
+  document.querySelectorAll('.spotlight-btn-pulse').forEach(el => el.classList.remove('spotlight-btn-pulse'));
+
+  // 2. 更新導覽控制台 UI
+  overlay.classList.add('active');
+  
+  // 只有多個項目時，才顯示底部控制浮條
+  if (currentTourTargets.length > 1) {
+    controller.classList.add('active');
+    document.getElementById('tour-status').innerText = `點心巡禮 (${index + 1} / ${currentTourTargets.length})`;
+    
+    const prevBtn = document.getElementById('tour-prev-btn');
+    const nextBtn = document.getElementById('tour-next-btn');
+    
+    prevBtn.disabled = (index === 0);
+    if (index === currentTourTargets.length - 1) {
+      nextBtn.innerText = '完成導覽 ✓';
+    } else {
+      nextBtn.innerText = '下一個 ➔';
+    }
+  } else {
+    controller.classList.remove('active');
+  }
+
+  // 3. 平滑滑動到目標
+  currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // 4. 稍微等待滾動就位，觸發高亮
+  spotlightTimeout = setTimeout(() => {
+    if (!overlay.classList.contains('active')) return;
+
+    const parentCard = currentTarget.closest('.product-card');
+    if (parentCard && parentCard !== currentTarget) {
+      parentCard.classList.add('spotlight-focus');
+    }
+    currentTarget.classList.add('spotlight-focus');
+
+    if (currentTarget.classList.contains('btn-add-cart') || currentTarget.classList.contains('add-to-cart-trigger')) {
+      currentTarget.classList.add('spotlight-btn-pulse');
+    }
+
+    // 【自動管理】：如果是單一商品，4秒後自動淡出；如果是多商品巡禮，就停留在這直到用戶按「下一個」！
+    if (currentTourTargets.length === 1) {
+      spotlightTimeout = setTimeout(() => {
+        window.clearSpotlight();
+      }, 4000);
+    }
+  }, 500);
+};
+
+// 暴露到全域，提供給 AI Assistant 做入口呼叫
 window.activateSpotlight = function(selector) {
   if (!selector) return;
   
-  // 主動切換產品系列頁籤邏輯
-  if (selector.includes('data-id=')) {
-    let categoryToClick = null;
-    if (selector.includes('namagashi')) categoryToClick = 'namagashi';
-    else if (selector.includes('yokan')) categoryToClick = 'yokan';
-    else if (selector.includes('daifuku')) categoryToClick = 'daifuku';
-    else if (selector.includes('dango')) categoryToClick = 'dango';
-    else if (selector.includes('classic')) categoryToClick = 'classic';
-    
-    if (categoryToClick) {
-      const activeBtn = document.querySelector('.filter-btn.active');
-      // 如果當前頁籤不是目標頁籤，就幫使用者點擊切換！
-      if (activeBtn && activeBtn.dataset.filter !== categoryToClick) {
-        const catBtn = document.querySelector(`.filter-btn[data-filter="${categoryToClick}"]`);
-        if (catBtn) {
-          catBtn.click();
-          // 等待 DOM 重新渲染後再次嘗試聚焦
-          setTimeout(() => {
-            window.activateSpotlight(selector);
-          }, 150);
-          return; // 終止這次執行，等 150ms 後由遞迴接手
-        }
-      }
-    }
-  }
-
-  // 【核心升級】：如果是導航到具體商品，強制切回「全部」頁籤以保證跨類別的所有商品都在 DOM 中可供查詢
+  // 【絕殺修正】：徹底消滅舊版單一分頁跳轉的死胡同，直接強力開啟「全部模式」以跨區匯聚所有商品 DOM！
   if (selector.includes('data-id')) {
     const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
     if (allBtn && !allBtn.classList.contains('active')) {
       allBtn.click();
-      // 等待 DOM 過濾渲染動畫完畢，重新遞迴執行此流程
+      // 等待過濾動畫，然後遞迴匯集
       setTimeout(() => {
         window.activateSpotlight(selector);
-      }, 300);
+      }, 350);
       return;
     }
   }
@@ -75,68 +143,28 @@ window.activateSpotlight = function(selector) {
   const targets = document.querySelectorAll(selector);
   if (targets.length === 0) return;
 
-  const overlay = document.getElementById('spotlight-overlay');
-  const targetsArray = Array.from(targets);
-  
-  // 清除舊的狀態與排程 handle
-  clearTimeout(spotlightTimeout);
-  document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
-  document.querySelectorAll('.spotlight-btn-pulse').forEach(el => el.classList.remove('spotlight-btn-pulse'));
+  // 寫入全域隊列，準備啟動引擎
+  currentTourTargets = Array.from(targets);
+  currentTourIndex = 0;
 
-  // 定義「依序循序導覽」遞迴排程
-  function runTourStep(index) {
-    // 已經全部巡禮完畢
-    if (index >= targetsArray.length) {
-      spotlightTimeout = setTimeout(() => {
-        window.clearSpotlight();
-      }, 3500);
-      return;
-    }
-
-    // 清空前一個導覽點的類別，但保留 overlay 的 active
-    document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
-    document.querySelectorAll('.spotlight-btn-pulse').forEach(el => el.classList.remove('spotlight-btn-pulse'));
-
-    const currentTarget = targetsArray[index];
-    overlay.classList.add('active'); // 帷幕啟動
-
-    // 1. 平滑捲動至目前焦點
-    currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-    // 2. 稍微等待捲動到位後才亮燈
-    spotlightTimeout = setTimeout(() => {
-      // ⚠️ 安全熔斷機制：如果這 500ms 間使用者手動關閉了帷幕，終止這輪導覽
-      if (!overlay.classList.contains('active')) return;
-
-      const parentCard = currentTarget.closest('.product-card');
-      if (parentCard && parentCard !== currentTarget) {
-        parentCard.classList.add('spotlight-focus');
-      }
-      currentTarget.classList.add('spotlight-focus');
-
-      // 額外加入按鈕高亮邏輯
-      if (currentTarget.classList.contains('btn-add-cart') || currentTarget.classList.contains('add-to-cart-trigger')) {
-        currentTarget.classList.add('spotlight-btn-pulse');
-      }
-
-      // 停留 3.5 秒讓用戶閱讀，隨即遞迴進入下一個
-      spotlightTimeout = setTimeout(() => {
-        runTourStep(index + 1);
-      }, 3500);
-    }, 500);
-  }
-
-  // 正式引爆全自動點心觀光導覽行程！
-  runTourStep(0);
+  // 正式開跑第一步！
+  window.runTourStep(0);
 };
 
 window.clearSpotlight = function() {
   const overlay = document.getElementById('spotlight-overlay');
+  const controller = document.getElementById('tour-controller');
+  
   if(overlay) overlay.classList.remove('active');
+  if(controller) controller.classList.remove('active');
+  
   document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
   document.querySelectorAll('.spotlight-btn-pulse').forEach(el => el.classList.remove('spotlight-btn-pulse'));
+  
   clearTimeout(spotlightTimeout);
+  currentTourTargets = [];
 };
+
 
 /* 
   1. 頂部主輪播看板 (Hero Carousel)
