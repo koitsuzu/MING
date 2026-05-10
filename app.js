@@ -79,6 +79,7 @@ window.activateSpotlight = function(selector) {
   
   // 清除舊的 spotlight
   document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
+  document.querySelectorAll('.spotlight-btn-pulse').forEach(el => el.classList.remove('spotlight-btn-pulse'));
   clearTimeout(spotlightTimeout);
 
   // 1. 平滑捲動至目標
@@ -87,9 +88,21 @@ window.activateSpotlight = function(selector) {
   // 2. 開啟聚光燈
   setTimeout(() => {
     overlay.classList.add('active');
-    target.classList.add('spotlight-focus');
     
-    // 3 秒後自動解除
+    // 【修正核心】：如果是按鈕等子元素，將包含它的卡片一併浮上來突破堆疊上下文
+    const parentCard = target.closest('.product-card');
+    if (parentCard && parentCard !== target) {
+      parentCard.classList.add('spotlight-focus');
+    }
+    
+    target.classList.add('spotlight-focus');
+
+    // 如果是加入購物車按鈕，觸發專屬強烈跳動提示
+    if (target.classList.contains('btn-add-cart') || target.classList.contains('add-to-cart-trigger')) {
+      target.classList.add('spotlight-btn-pulse');
+    }
+    
+    // 3.5 秒後自動解除
     spotlightTimeout = setTimeout(() => {
       window.clearSpotlight();
     }, 3500);
@@ -100,6 +113,7 @@ window.clearSpotlight = function() {
   const overlay = document.getElementById('spotlight-overlay');
   if(overlay) overlay.classList.remove('active');
   document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
+  document.querySelectorAll('.spotlight-btn-pulse').forEach(el => el.classList.remove('spotlight-btn-pulse'));
   clearTimeout(spotlightTimeout);
 };
 
@@ -858,7 +872,7 @@ function initAIAssistant() {
     }
 
     // 2. 生菓子系列
-    if (text.includes('生菓子') || text.includes('生果子') || text.includes('手工') || text.includes('三角棒') || text.includes('雕刻') || text.includes('工藝') || text.includes('職人')) {
+    if (text.includes('生菓子') || text.includes('生果子') || text.includes('手工') || text.includes('三角棒') || text.includes('雕刻') || text.includes('工藝')) {
       return { 
         replyText: `✨ 職人代表作：【手作櫻綻・生菓子】($180)
       
@@ -932,7 +946,7 @@ function initAIAssistant() {
     }
 
     // 品牌故事 / 職人精神
-    if (text.includes('精神') || text.includes('故事') || text.includes('理念') || text.includes('關於')) {
+    if (text.includes('精神') || text.includes('故事') || text.includes('理念') || text.includes('關於') || text.includes('職人')) {
       return {
         replyText: `📜 饈菓子的職人故事：
       傳承百年的頂級手藝，將四季的流轉融入每一顆菓子。堅持「一期一會」的初心，用一生的心意為您呈現最極致的和風美學。
