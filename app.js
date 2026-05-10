@@ -936,56 +936,56 @@ function initAIAssistant() {
         replyText: `🌸 臻品大福系列推薦：
       我們有最受歡迎的【櫻綻大福】、【草莓大福】、【濃抹茶大福】等經典系列，每一口都是極致享受。
       
-      已為您自動引導切換到「大福系列」，快來挑選您心儀的點心吧！`,
-        targetSelector: ".filter-btn[data-filter='daifuku']"
+      已啟動「全系列巡禮」，將引領您飽覽所有的極品大福！`,
+        targetSelector: "[data-id='daifuku-1'], [data-id='daifuku-2'], [data-id='daifuku-3'], [data-id='daifuku-4']"
       };
     }
 
     // 2. 生菓子系列
     if (text.includes('生菓子') || text.includes('生果子') || text.includes('手工') || text.includes('三角棒') || text.includes('雕刻') || text.includes('工藝')) {
       return { 
-        replyText: `✨ 職人代表作：【手作櫻綻・生菓子】($180)
+        replyText: `✨ 職人代表作：頂級生菓子系列
       
-      每一顆都是職人運用祖傳三角棒，將四季的流轉（如松風落雪、翠竹流年）具象化，呈現極致的和風禪意。
+      由職人傾注一生手藝，將四季的流轉具象化。包含【手作櫻綻】、【松風落雪】、【翠竹流年】與極涼逸品【葛饅頭】。
       
-      已為您自動引導切換到「生菓子系列」，您可以一覽這門傳承數百年的指尖藝術。`,
-        targetSelector: "[data-id='namagashi-1']"
+      已為您啟動「生菓子全系列豪華巡禮」，邀您細細品味極致的和風禪意與指尖藝術！`,
+        targetSelector: "[data-id='namagashi-1'], [data-id='namagashi-2'], [data-id='namagashi-3'], [data-id='namagashi-4'], [data-id='namagashi-5'], [data-id='namagashi-6']"
       };
     }
 
     // 3. 羊羹系列
     if (text.includes('羊羹') || text.includes('清泉錦鯉') || text.includes('金栗')) {
       return {
-        replyText: `🎋 絕代風雅：【清泉錦鯉羊羹】($240)
+        replyText: `🎋 絕代風雅：羊羹臻品系列
       
-      晶瑩剔透的瓊脂中，巧妙鑲嵌手工熬製的豆沙錦鯉，猶如溪水中跳躍的流光。搭配【金栗凝脂羊羹】，是品茗的上乘之選。
+      晶瑩剔透的瓊脂猶如流動的光輝，包含大氣優雅的【金栗凝脂羊羹】、匠心獨具的【清泉錦鯉羊羹】與濃醇的【宇治抹茶羊羹】。
       
-      已為您自動引導切換到「羊羹系列」，請細細品味視覺與味覺的雙重盛宴。`,
-        targetSelector: ".filter-btn[data-filter='yokan']"
+      已啟動「羊羹全系列大賞巡禮」，請隨步調細細品味這場味覺雙重盛宴。`,
+        targetSelector: "[data-id='yokan-1'], [data-id='yokan-2'], [data-id='yokan-3'], [data-id='yokan-4']"
       };
     }
 
     // 4. 糰子系列
     if (text.includes('糰子') || text.includes('團子') || text.includes('三色') || text.includes('醬油')) {
       return {
-        replyText: `🍡 療癒和風：【春遊極致三色糰子】($80)
+        replyText: `🍡 療癒和風：經典糰子大賞
       
-      復刻兒時的賞櫻滋味！還有甜中帶鹹的【古法焦香甜醬油糰子】，以及超人氣的萌動可愛熊糰子，讓您的味蕾跟著一起快樂跳舞。
+      復刻兒時的賞櫻滋味！包含絕美的【三色糰子】、甜中帶鹹的【古法焦香甜醬油糰子】，以及孩子們最愛的【萌動可愛熊糰子】。
       
-      已為您引導至「糰子系列」，一起感受最樸實的日式美味！`,
-        targetSelector: "[data-id='dango-1']"
+      已啟動「全系列糰子巡禮」，讓我們一起感受最樸實溫暖的日式美味！`,
+        targetSelector: "[data-id='dango-1'], [data-id='dango-2'], [data-id='dango-3']"
       };
     }
 
     // 5. 禮盒與伴手禮
     if (text.includes('禮盒') || text.includes('送禮') || text.includes('伴手禮') || text.includes('經典') || text.includes('和菓子') || text.includes('和果子')) {
       return {
-        replyText: `🎁 精緻送禮首選：【八重櫻御賞禮盒】($450)
+        replyText: `🎁 精緻送禮首選：經典和菓子禮盒系列
       
-      內含精選和菓子並採用日本進口友禪紙手工包裝。大器優雅，呈現饈菓子美學，是致贈貴賓的完美之選。
+      嚴選極致臻品組成禮物，並採用日本進口友禪紙手工包裝。無論是【八重櫻御賞禮盒】或是【手作金栗燒】，均是大器典雅的致贈首選。
       
-      已為您引導至「經典和菓子系列」查看更多頂級獻禮！`,
-        targetSelector: "[data-id='classic-1']"
+      已為您啟動「頂級禮盒專場巡禮」，一覽所有貴氣獻禮！`,
+        targetSelector: "[data-id='classic-1'], [data-id='classic-2'], [data-id='classic-3']"
       };
     }
 

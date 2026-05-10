@@ -89,12 +89,12 @@ app.post('/api/chat', async (req, res) => {
    - 八重櫻御賞禮盒 / 伴手禮 / 送禮: "[data-id='classic-1']"
    - 手作金栗燒 / 紅豆御中原: "[data-id='classic-2'], [data-id='classic-3']"
 
-3. 🏷️ 商品大類別頁籤 (問及大項類別時)：
-   - 生菓子系列 / 生果子: ".filter-btn[data-filter='namagashi']"
-   - 羊羹系列: ".filter-btn[data-filter='yokan']"
-   - 大福系列: ".filter-btn[data-filter='daifuku']"
-   - 糰子系列 / 團子: ".filter-btn[data-filter='dango']"
-   - 經典和菓子系列 / 和果子: ".filter-btn[data-filter='classic']"
+3. 🏷️ 全系列深度巡禮 (問及大項類別時，你必須回傳該類別所有 ID 來觸發「全系列導覽」)：
+   - 生菓子系列 / 所有生果子: "[data-id='namagashi-1'], [data-id='namagashi-2'], [data-id='namagashi-3'], [data-id='namagashi-4'], [data-id='namagashi-5'], [data-id='namagashi-6']"
+   - 羊羹系列 / 所有羊羹: "[data-id='yokan-1'], [data-id='yokan-2'], [data-id='yokan-3'], [data-id='yokan-4']"
+   - 大福系列 / 所有大福: "[data-id='daifuku-1'], [data-id='daifuku-2'], [data-id='daifuku-3'], [data-id='daifuku-4']"
+   - 糰子系列 / 團子大賞: "[data-id='dango-1'], [data-id='dango-2'], [data-id='dango-3']"
+   - 經典和菓子系列 / 送禮禮盒: "[data-id='classic-1'], [data-id='classic-2'], [data-id='classic-3']"
 
 4. 🏛️ 品牌資訊與功能體驗 (絕不能與商品混淆)：
    - 茶席搭配「遊戲」 / 「活動」體驗 (非詢問抹茶口味本身): "#interactive-game"
