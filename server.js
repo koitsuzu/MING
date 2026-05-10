@@ -62,39 +62,53 @@ app.post('/api/chat', async (req, res) => {
 你必須強制以 JSON 格式回覆，絕對不要包含 Markdown \`\`\`json 標籤或任何其他純文字前綴後綴。
 請根據你回答的內容，提供最合適的網頁對應區塊 CSS Selector 作為 targetSelector。
 
+【智能聚焦意圖判斷邏輯 - 請嚴格遵守優先權】：
+1. **意圖分類**：判斷使用者是問「食材風味推薦」、「具體商品」、「公司核心」、「體驗活動」還是「服務」。
+2. **多重推薦機制 (✨新功能)**：若使用者詢問特定食材(如抹茶、櫻花)「系列/推薦」，你必須將相關的「多個商品 ID」合併為一個字串回傳（用逗號分隔，例如："[data-id='id1'], [data-id='id2']")。
+3. **防禦型分離**：不可將「抹茶」(食材)與「茶席」(遊戲)混淆！
+
 【可用的 targetSelector 參考對照表】：
-1. 頂級活動區：
-   - 20週年活動: "#hero"
-2. 商品類別頁籤 (當用戶問的是整個類別，或沒有提到具體商品時)：
+1. 🍃 特殊食材風味精選 (支援多重打光！以逗號分隔合併回傳)：
+   - 所有「抹茶」系列產品 / 口味推薦: "[data-id='yokan-2'], [data-id='daifuku-3']"
+   - 所有「櫻花」系列產品 / 櫻綻美學: "[data-id='daifuku-2'], [data-id='classic-1']"
+   - 所有「草莓」系列產品: "[data-id='daifuku-1']"
+   - 所有「紅豆/豆沙」相關: "[data-id='namagashi-4'], [data-id='daifuku-1']"
+
+2. 📦 特定商品卡片 (針對性強，最優先單一目標)：
+   - 靜岡濃抹茶大福: "[data-id='daifuku-3']"
+   - 宇治抹茶羊羹: "[data-id='yokan-2']"
+   - 十勝紅豆草莓大福 / 草莓大福: "[data-id='daifuku-1']"
+   - 鹽漬八重櫻大福 / 櫻綻大福: "[data-id='daifuku-2']"
+   - 手作櫻綻生菓子 / 雕刻工藝 / 三角棒藝術: "[data-id='namagashi-1']"
+   - 松風落雪 / 翠竹流年 / 紅豆沙山: "[data-id='namagashi-2'], [data-id='namagashi-3'], [data-id='namagashi-4']"
+   - 秋楓霜露 / 菊綻金秋 / 葛饅頭: "[data-id='namagashi-5'], [data-id='namagashi-6']"
+   - 金栗凝脂羊羹: "[data-id='yokan-1']"
+   - 清泉錦鯉羊羹 / 黑糖羊羹: "[data-id='yokan-3'], [data-id='yokan-4']"
+   - 春遊極致三色糰子 / 糰子: "[data-id='dango-1']"
+   - 焦香甜醬油糰子 / 萌動可愛熊糰子: "[data-id='dango-2'], [data-id='dango-3']"
+   - 八重櫻御賞禮盒 / 伴手禮 / 送禮: "[data-id='classic-1']"
+   - 手作金栗燒 / 紅豆御中原: "[data-id='classic-2'], [data-id='classic-3']"
+
+3. 🏷️ 商品大類別頁籤 (問及大項類別時)：
    - 生菓子系列 / 生果子: ".filter-btn[data-filter='namagashi']"
    - 羊羹系列: ".filter-btn[data-filter='yokan']"
    - 大福系列: ".filter-btn[data-filter='daifuku']"
-   - 糰子系列: ".filter-btn[data-filter='dango']"
+   - 糰子系列 / 團子: ".filter-btn[data-filter='dango']"
    - 經典和菓子系列 / 和果子: ".filter-btn[data-filter='classic']"
-3. 特定商品卡片 (最優先，請盡量打光在具體商品上)：
-   - 手作櫻綻生菓子 / 雕刻工藝 / 藝術: "[data-id='namagashi-1']"
-   - 松風落雪 / 翠竹流年 / 紅豆沙山: "[data-id='namagashi-2']", "[data-id='namagashi-3']", "[data-id='namagashi-4']"
-   - 秋楓霜露 / 菊綻金秋 / 葛饅頭: "[data-id='namagashi-5']", "[data-id='namagashi-6']"
-   - 金栗凝脂羊羹: "[data-id='yokan-1']"
-   - 宇治抹茶羊羹 / 清泉錦鯉羊羹 / 黑糖羊羹: "[data-id='yokan-2']", "[data-id='yokan-3']", "[data-id='yokan-4']"
-   - 十勝紅豆草莓大福 / 草莓大福: "[data-id='daifuku-1']"
-   - 鹽漬八重櫻大福 / 櫻綻大福 / 櫻花大福: "[data-id='daifuku-2']"
-   - 靜岡濃抹茶大福 / 溫潤黑芝麻大福: "[data-id='daifuku-3']", "[data-id='daifuku-4']"
-   - 春遊極致三色糰子 / 糰子 / 團子: "[data-id='dango-1']"
-   - 焦香甜醬油糰子 / 萌動可愛熊糰子: "[data-id='dango-2']", "[data-id='dango-3']"
-   - 八重櫻御賞禮盒 / 伴手禮 / 送禮: "[data-id='classic-1']"
-   - 手作金栗燒 / 紅豆御中原: "[data-id='classic-2']", "[data-id='classic-3']"
-4. 功能與資訊區塊：
-   - 茶席配對遊戲/搭配抹茶: "#interactive-game"
-   - 品牌理念 / 品牌故事 / 職人故事: "#about"
-   - 四大堅持 / 精選特色: ".featured-section"
-   - 聯絡方式/店址/營業時間: ".footer-contact-column"
-   - 購物車/免運/結帳/查看清單: "#cart-btn"
-   - 如何加入購物車 / 如何購買 / 怎麼買: "[data-id='daifuku-1'] .btn-add-cart"
-5. 若無特定對應區塊，或僅為一般哈囉問候： null
 
-注意：如果你提到了多個商品，請挑選「最主要那一個」或是對應的「商品類別頁籤」作為聚焦目標。絕對不要瞎編不存在的 selector！
-JSON 格式範例： {"replyText": "您的回答內容", "targetSelector": "[data-id='daifuku-1']"}`;
+4. 🏛️ 品牌資訊與功能體驗 (絕不能與商品混淆)：
+   - 茶席搭配「遊戲」 / 「活動」體驗 (非詢問抹茶口味本身): "#interactive-game"
+   - 品牌故事 / 品牌理念 / 職人精神: "#about"
+   - 四大堅持 / 核心特色: ".featured-section"
+   - 聯絡資訊 / 地址 / 營業時間: ".footer-contact-column"
+   - 查看購物袋 / 購物車 / 免運費: "#cart-btn"
+   - 教我怎麼買 / 加入購物車按鈕: "[data-id='daifuku-1'] .btn-add-cart"
+   - 20週年活動: "#hero"
+
+5. ❓ 若無明確對應，或是一般哈囉閒聊： null
+
+注意：你現在可以一次「打光多個商品」來向顧客做強力的視覺化推薦！只需在 targetSelector 字串內將它們用逗號隔開即可。
+JSON 格式範例： {"replyText": "您的回答內容", "targetSelector": "[data-id='yokan-2'], [data-id='daifuku-3']"}`;
 
     const response = await fetch(apiURL, {
       method: 'POST',

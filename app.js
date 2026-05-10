@@ -59,10 +59,10 @@ window.activateSpotlight = function(selector) {
     }
   }
 
-  let target = document.querySelector(selector);
+  let targets = document.querySelectorAll(selector);
   
-  // 萬一還是找不到，可能被隱藏，做最後防護切回全部
-  if (!target && selector.includes('data-id')) {
+  // 萬一還是找不到，可能被隱藏（例如被分類篩選掉了），做最後防護切回「全部」
+  if (targets.length === 0 && selector.includes('data-id')) {
     const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
     if (allBtn) {
       allBtn.click();
@@ -73,34 +73,36 @@ window.activateSpotlight = function(selector) {
     }
   }
 
-  if (!target) return;
+  if (targets.length === 0) return;
 
   const overlay = document.getElementById('spotlight-overlay');
   
-  // 清除舊的 spotlight
+  // 清除舊的 spotlight 狀態
   document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
   document.querySelectorAll('.spotlight-btn-pulse').forEach(el => el.classList.remove('spotlight-btn-pulse'));
   clearTimeout(spotlightTimeout);
 
-  // 1. 平滑捲動至目標
-  target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // 1. 平滑捲動至第一個目標
+  targets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-  // 2. 開啟聚光燈
+  // 2. 開啟聚光燈，針對所有匹配元素進行打光
   setTimeout(() => {
     overlay.classList.add('active');
     
-    // 【修正核心】：如果是按鈕等子元素，將包含它的卡片一併浮上來突破堆疊上下文
-    const parentCard = target.closest('.product-card');
-    if (parentCard && parentCard !== target) {
-      parentCard.classList.add('spotlight-focus');
-    }
-    
-    target.classList.add('spotlight-focus');
+    targets.forEach(target => {
+      // 如果是按鈕等深層子元素，將其包含的整個卡片一併浮上來
+      const parentCard = target.closest('.product-card');
+      if (parentCard && parentCard !== target) {
+        parentCard.classList.add('spotlight-focus');
+      }
+      
+      target.classList.add('spotlight-focus');
 
-    // 如果是加入購物車按鈕，觸發專屬強烈跳動提示
-    if (target.classList.contains('btn-add-cart') || target.classList.contains('add-to-cart-trigger')) {
-      target.classList.add('spotlight-btn-pulse');
-    }
+      // 如果是加入購物車按鈕，額外觸發專屬強烈跳動提示
+      if (target.classList.contains('btn-add-cart') || target.classList.contains('add-to-cart-trigger')) {
+        target.classList.add('spotlight-btn-pulse');
+      }
+    });
     
     // 3.5 秒後自動解除
     spotlightTimeout = setTimeout(() => {
@@ -842,6 +844,29 @@ function initAIAssistant() {
       };
     }
 
+    // 抹茶專案系列 (高優先序過濾)
+    if (text.includes('抹茶大福')) {
+      return {
+        replyText: `🍵 茶韻極致首選：【靜岡濃抹茶大福】($95)
+      
+      選用日本靜岡優質茶粉揉入特製苦甜抹茶餡，入口即化且餘韻綿長。
+      
+      已為您鎖定這款濃郁飽滿的抹茶大福！`,
+        targetSelector: "[data-id='daifuku-3']"
+      };
+    }
+    if (text.includes('抹茶')) {
+      return {
+        replyText: `🍵 饈菓子 經典抹茶系列推薦：
+      我們精選了多款日式純厚抹茶逸品！包含：
+      1. 【宇治抹茶羊羹】：凝脂般晶瑩，回甘無窮。
+      2. 【靜岡濃抹茶大福】：濃郁苦甜，飽滿茶香。
+      
+      已同步為您「全域打亮」這兩款熱銷的抹茶臻品供您比較！`,
+        targetSelector: "[data-id='yokan-2'], [data-id='daifuku-3']"
+      };
+    }
+
     // 1. 大福系列與商品
     if (text.includes('草莓大福') || text.includes('草莓')) {
       return {
@@ -918,7 +943,7 @@ function initAIAssistant() {
     }
 
     // 茶席配對 / 搭配
-    if (text.includes('茶') || text.includes('搭配') || text.includes('配對') || text.includes('茶席') || text.includes('抹茶') || text.includes('焙茶') || text.includes('煎茶')) {
+    if (text.includes('茶') || text.includes('搭配') || text.includes('配對') || text.includes('茶席') || text.includes('焙茶') || text.includes('煎茶')) {
       return {
         replyText: `🍵 饈菓子獨家茶席搭配秘訣：
       1. 【大福類】建議搭配「焙茶」或「玄米茶」，完美帶出豆沙純粹麥香。
