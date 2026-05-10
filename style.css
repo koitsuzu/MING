@@ -1807,3 +1807,36 @@ body {
     height: 460px;
   }
 }
+
+/* AI 導航聚光燈特效 (Spotlight Focus) */
+@keyframes spotlightFlash {
+  0% { 
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0);
+    outline-color: rgba(168, 86, 84, 0);
+    background-color: rgba(168, 86, 84, 0);
+  }
+  15% { 
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
+    outline-color: rgba(168, 86, 84, 0.8);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  85% { 
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
+    outline-color: rgba(168, 86, 84, 0.8);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  100% { 
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0);
+    outline-color: rgba(168, 86, 84, 0);
+    background-color: rgba(168, 86, 84, 0);
+  }
+}
+
+.spotlight-focus {
+  position: relative;
+  z-index: 998 !important; /* 低於對話視窗 (z-index: 999) 但高於其餘網頁所有板塊 */
+  outline: 4px solid transparent;
+  outline-offset: -4px;
+  border-radius: 12px;
+  animation: spotlightFlash 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+}

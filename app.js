@@ -680,8 +680,8 @@ function bindCartItemEvents() {
   6. AI 智能兔子助理互動與智能問答系統 (AI Rabbit Assistant System)
 */
 function initAIAssistant() {
-  // 💡 在下方放入您的真實 Gemini API 金鑰，即可啟用 Gemini 2.5 實體大語言模型進行對話！若留空則會自動流暢降級為本地高智能關鍵字問答引擎。
-  const GEMINI_API_KEY = 'AIzaSyDUbDwXinK1TCtDJZX3XLNDXRjb_J7KoAw';
+  // 💡 已改為呼叫後端安全代理，金鑰存放於後端 .env 中
+  const BACKEND_URL = 'http://localhost:3000/api/chat';
 
   const aiBtn = document.getElementById('ai-btn');
   const chatWindow = document.getElementById('ai-chat-window');
@@ -732,172 +732,80 @@ function initAIAssistant() {
 
     // 20週年紀念
     if (text.includes('20') || text.includes('二十') || text.includes('周年') || text.includes('週年')) {
-      return `🎉 饈菓子 20 週年紀念特別企劃：
-      自 2003 年創立以來，我們已與無數饕客共度了 20 年的甜蜜歲月。
-      
-      今年我們特別推出了全新的「20週年櫻綻限定版大福」，融合金箔與櫻花甘露，感謝您一路上對我們的支持！您可以在頂部看板的大圖中一睹它的絕美風采喔！`;
+      return { text: `🎉 饈菓子 20 週年紀念特別企劃：\n自 2003 年創立以來，我們已與無數饕客共度了 20 年的甜蜜歲月。\n\n今年我們特別推出了全新的「20週年櫻綻限定版大福」，融合金箔與櫻花甘露，感謝您一路上對我們的支持！您可以在頂部看板的大圖中一睹它的絕美風采喔！`, targetSectionId: "hero" };
     }
 
     // 大福與經典點心
     if (text.includes('大福') || text.includes('櫻綻') || text.includes('草莓') || text.includes('點心') || text.includes('商品') || text.includes('甜點')) {
-      return `🌸 臻品推薦：
-      1. 【櫻綻大福】($180)：融合當季櫻花瓣與特製生餡，金箔點綴，層次細膩高雅。
-      2. 【草莓大福】($150)：嚴選新鮮大草莓與京都十勝紅豆餡，酸甜適口。
-      
-      您可以在網頁下方的「臻品點心坊」中點擊「加入購物車」進行模擬購買喔！`;
+      return { text: `🌸 臻品推薦：\n1. 【櫻綻大福】($180)：融合當季櫻花瓣與特製生餡，金箔點綴，層次細膩高雅。\n2. 【草莓大福】($150)：嚴選新鮮大草莓與京都十勝紅豆餡，酸甜適口。\n\n我已經幫您切換到「大福系列」頁籤，您可以在「臻品點心坊」中點擊「加入購物車」進行模擬購買喔！`, targetSectionId: "products-daifuku" };
     }
 
     // 生菓子與三角棒
     if (text.includes('生菓子') || text.includes('手工') || text.includes('三角棒') || text.includes('雕刻') || text.includes('藝術') || text.includes('工藝') || text.includes('職人')) {
-      return `✨ 職人代表作：【三角棒手作生菓子】($220)
-      
-      每一顆都是職人運用祖傳三角棒，經由揉、捏、壓、切等數十道工序精細雕刻而成。它將四季的流轉（如春櫻、秋楓、冬雪）具象化，呈現極致的和風禪意。
-      
-      您可以在「職人故事」區塊中，一覽這門傳承數百年的指尖藝術。`;
+      return { text: `✨ 職人代表作：【三角棒手作生菓子】($220)\n\n每一顆都是職人運用祖傳三角棒，經由揉、捏、壓、切等數十道工序精細雕刻而成。它將四季的流轉（如春櫻、秋楓、冬雪）具象化，呈現極致的和風禪意。\n\n您可以在「職人故事」區塊中，一覽這門傳承數百年的指尖藝術。`, targetSectionId: "about" };
     }
 
     // 葛饅頭
     if (text.includes('葛') || text.includes('饅頭') || text.includes('五山送火') || text.includes('涼') || text.includes('消暑') || text.includes('夏天')) {
-      return `🍃 涼夏逸品：【五山送火葛饅頭】($160)
-      
-      選用京都頂級葛粉製成半透明外皮，包覆細滑手工豆沙。
-      質地晶瑩剔透、入口即化，帶給您沁人心脾的清爽口感，是夏日茶席上最受歡迎的消暑極品。`;
+      return { text: `🍃 涼夏逸品：【五山送火葛饅頭】($160)\n\n選用京都頂級葛粉製成半透明外皮，包覆細滑手工豆沙。\n質地晶瑩剔透、入口即化，帶給您沁人心脾的清爽口感，是夏日茶席上最受歡迎的消暑極品。我已為您切換至「經典和菓子」頁籤！`, targetSectionId: "products-classic" };
+    }
+
+    // 糰子系列
+    if (text.includes('糰子') || text.includes('三色糰子') || text.includes('醬油糰子') || text.includes('熊糰子')) {
+      return { text: `🍡 **饈菓子 經典糰子系列**：\n1. 【春遊極致三色糰子】($120)：經典粉白綠三色，質地Q彈，帶有淡淡米香與艾草香。\n2. 【古法焦香甜醬油糰子】($110)：炭烤香氣與特製甜醬油交織，鹹甜適口。\n3. 【萌動可愛熊糰子】($130)：立體小熊造型，配上綿密芝麻餡，視覺與味覺的雙重享受！\n\n我已經自動為您切換到「糰子系列」頁籤了，歡迎加入購物車喔！🌸`, targetSectionId: "products-dango" };
     }
 
     // 禮盒
     if (text.includes('禮盒') || text.includes('送禮') || text.includes('禮') || text.includes('伴手禮')) {
-      return `🎁 精緻送禮首選：【四季和菓子禮盒】($880)
-      
-      內含本店最暢銷的櫻綻大福、手工生菓子與葛饅頭，並採用日本進口友禪紙手工包裝。
-      精緻大氣，呈現最高貴優雅的饈菓子美學，是致贈長輩或貴賓的完美首選。`;
+      return { text: `🎁 精緻送禮首選：【四季和菓子禮盒】($880)\n\n內含本店最暢銷的櫻綻大福、手工生菓子與葛饅頭，並採用日本進口友禪紙手工包裝。\n精緻大氣，呈現最高貴優雅的饈菓子美學，是致贈長輩或貴賓的完美首選。`, targetSectionId: "products" };
     }
 
     // 茶席配對 / 搭配
     if (text.includes('茶') || text.includes('搭配') || text.includes('配對') || text.includes('茶席') || text.includes('抹茶') || text.includes('焙茶') || text.includes('煎茶') || text.includes('玄米茶')) {
-      return `🍵 饈菓子獨家茶席搭配秘訣：
-      1. 【大福類】建議搭配「焙茶」或「玄米茶」，能完美帶出豆沙的純粹麥香。
-      2. 【生菓子】是「宇治煎茶」或「日本濃抹茶」的絕配，甘苦交織、一期一會。
-      3. 【葛饅頭】適合佐以「冷泡煎茶」，入口清涼回甘。
-      
-      網頁中段設有「茶席配對」互動遊戲，歡迎您親自配對，還可以獲得推薦的專屬茶譜喔！`;
+      return { text: `🍵 饈菓子獨家茶席搭配秘訣：\n1. 【大福類】建議搭配「焙茶」或「玄米茶」，能完美帶出豆沙的純粹麥香。\n2. 【生菓子】是「宇治煎茶」或「日本濃抹茶」的絕配，甘苦交織、一期一會。\n3. 【葛饅頭】適合佐以「冷泡煎茶」，入口清涼回甘。\n\n網頁中段設有「茶席配對」互動遊戲，歡迎您親自配對，還可以獲得推薦的專屬茶譜喔！`, targetSectionId: "interactive-game" };
     }
 
     // 四大堅持 / 品牌精神 / 理念
     if (text.includes('堅持') || text.includes('四大') || text.includes('精神') || text.includes('理念') || text.includes('品牌') || text.includes('特色') || text.includes('關於')) {
-      return `📜 饈菓子的四大品牌堅持：
-      1. 【純天然食材】：絕無人工色素，用植物天然原色演繹極致色彩。
-      2. 【當日現做】：每日凌晨手工限量製作，封存最鮮甜的一刻。
-      3. 【極致禪意】：將俳句、和歌與庭園山水融入造型，體現日式生活哲學。
-      4. 【一期一會】：每一次與您的相遇，我們都傾注一生的心意，為您呈現完美之作。`;
+      return { text: `📜 饈菓子的四大品牌堅持：\n1. 【純天然食材】：絕無人工色素，用植物天然原色演繹極致色彩。\n2. 【當日現做】：每日凌晨手工限量製作，封存最鮮甜的一刻。\n3. 【極致禪意】：將俳句、和歌與庭園山水融入造型，體現日式生活哲學。\n4. 【一期一會】：每一次與您的相遇，我們都傾注一生的心意，為您呈現完美之作。`, targetSectionId: "featured" };
     }
 
     // 購買 / 配送 / 運費 / 購物車 / 結帳
     if (text.includes('買') || text.includes('購買') || text.includes('配送') || text.includes('運費') || text.includes('購物') || text.includes('結帳') || text.includes('加入購物車')) {
-      return `📦 購物與配送說明：
-      1. 【如何購買】：在「臻品點心坊」中，點擊任何產品下的「加入購物車」。
-      2. 【查看商品】：點擊右上角兔子助理旁的「購物袋」即可展開清單。
-      3. 【配送服務】：滿 $1,000 元即可享受低溫宅配免運費服務，當日製作、隔日低溫新鮮送達。
-      4. 【結帳流程】：在購物車清單中點擊「模擬結帳」即可體驗專屬的精緻和風結帳體驗！`;
+      return { text: `📦 購物與配送說明：\n1. 【如何購買】：在「臻品點心坊」中，點擊任何產品下的「加入購物車」。\n2. 【查看商品】：點擊右上角兔子助理旁的「購物袋」即可展開清單。\n3. 【配送服務】：滿 $1,000 元即可享受低溫宅配免運費服務，當日製作、隔日低溫新鮮送達。\n4. 【結帳流程】：在購物車清單中點擊「模擬結帳」即可體驗專屬的精緻和風結帳體驗！`, targetSectionId: "products" };
     }
 
     // 聯絡方式 / 地址 / 電話 / 營業時間 / 店址 / 位置
     if (text.includes('聯絡') || text.includes('地址') || text.includes('電話') || text.includes('時間') || text.includes('營業') || text.includes('店休') || text.includes('地圖') || text.includes('位置') || text.includes('在哪') || text.includes('客服')) {
-      return `📍 饈菓子 聯絡資訊與營業時間：
-      - 【店面地址】：台北市大安區和風禪意路 88 號 1 樓
-      - 【聯絡電話】：02-2735-8899
-      - 【營業時間】：週一至週日 11:00 - 19:30 (每週二店休，請注意不要白跑一趟喔！)
-      
-      歡迎您在營業時間撥打電話諮詢預購，或前來實體店面感受最極致的和風美學體驗喔！🌸`;
+      return { text: `📍 饈菓子 聯絡資訊與營業時間：\n- 【店面地址】：台北市大安區和風禪意路 88 號 1 樓\n- 【聯絡電話】：02-2735-8899\n- 【營業時間】：週一至週日 11:00 - 19:30 (每週二店休，請注意不要白跑一趟喔！)\n\n歡迎您在營業時間撥打電話諮詢預購，或前來實體店面感受最極致的和風美學體驗喔！🌸`, targetSectionId: "footer-contact" };
     }
 
     // 基礎問候
     if (text.includes('哈囉') || text.includes('你好') || text.includes('您好') || text.includes('hi') || text.includes('hello') || text.includes('嗨') || text.includes('在嗎')) {
-      return `🌸 您好！我是饈菓子的兔子助理。很高興與您相遇！
-      
-      不論您想了解臻品和菓子、茶席配對秘訣，還是我們的職人故事，我都能為您解答。
-      請問今天想聊聊哪一樣臻品呢？`;
+      return { text: `🌸 您好！我是饈菓子的兔子助理。很高興與您相遇！\n\n不論您想了解臻品和菓子、茶席配對秘訣，還是我們的職人故事，我都能為您解答。\n請問今天想聊聊哪一樣臻品呢？`, targetSectionId: "hero" };
     }
 
     // 默認 Fallback
-    return `🌸 謝謝您的提問！關於您提到的話題，我是專屬饈菓子的智能問答助手，主要為您解答這個網站內部的和菓子相關知識。
-    
-    您可以試著這樣詢問我：
-    - 「你們在哪裡？電話是多少？」
-    - 「櫻綻大福特色是什麼？」
-    - 「我想了解三角棒生菓子」
-    - 「和菓子應該搭配什麼茶？」
-    - 「你們有什麼禮盒或品牌堅持嗎？」
-    
-    您也可以直接點擊下方常駐的快捷按鈕（例如：🌸 當季熱銷推薦、🍵 點心茶席配對），讓我為您解答喔！`;
+    return { text: `🌸 謝謝您的提問！關於您提到的話題，我是專屬饈菓子的智能問答助手，主要為您解答這個網站內部的和菓子相關知識。\n\n您可以試著這樣詢問我：\n- 「你們在哪裡？電話是多少？」\n- 「櫻綻大福特色是什麼？」\n- 「我想了解三角棒生菓子」\n- 「和菓子應該搭配什麼茶？」\n- 「你們有什麼禮盒或品牌堅持嗎？」\n\n您也可以直接點擊下方常駐的快捷按鈕（例如：🌸 當季熱銷推薦、🍵 點心茶席配對），讓我為您解答喔！`, targetSectionId: null };
   }
 
-  // 2.5 實體 Gemini 大語言模型 API 調用核心
+  // 2.5 呼叫後端安全代理 API 獲取 Gemini 回覆
   async function fetchGeminiResponse(userPrompt) {
-    const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-    
-    const systemInstruction = `你是一位親切、優雅、精通日本禪意美學的『饈菓子 (Shiu Guoji)』頂級手作和菓子專賣店兔子智能助理。
-請根據以下提供的網頁完整知識庫，用可愛、親切且富有禪意的口吻來回答顧客的問題。
-你可以適度使用符合和風意境的表情符號（如：🌸、🍵、🍡、🎁、📍、⏰）。
-
-【饈菓子 品牌核心資訊與知識庫】：
-1. 品牌定位與四大堅持：
-   - 【純天然食材】：絕無人工色素，用天然植物原色演繹極致色彩，健康無負擔。
-   - 【當日現做】：每日凌晨手工限量製作，封存最鮮甜美味的一刻。
-   - 【極致禪意】：將日式俳句、和歌、庭園枯山水融入菓子造型與意境，體現極致日式生活哲學。
-   - 【一期一會】：珍惜每一次與顧客的相遇，傾注職人一生的心意。
-2. 臻品點心與價格：
-   - 【櫻綻大福】($180)：金箔點綴，融合當季櫻花瓣與特製生餡，精緻奢華，層次細雅。
-   - 【草莓大福】($150)：新鮮嚴選整顆大草莓搭配京都十勝紅豆餡，酸甜絕配，Q彈多汁。
-   - 【三角棒手作生菓子】($220)：職人代表作，運用傳承數百年的祖傳「三角棒」木雕工具，經揉、捏、壓、切等數十道工序，手工雕刻出四季流轉（如春櫻、秋楓、冬雪）的立體美學。
-   - 【五山送火葛饅頭】($160)：涼夏逸品，選用京都頂級葛粉製成半透明冰涼外皮，包覆滑細豆沙，質地晶營，入口即化。
-   - 【四季和菓子禮盒】($880)：精緻送禮首選，內含櫻綻大福、手工生菓子與葛饅頭，並用日本進口友禪紙手工包裝，尊貴典雅。
-3. 聯絡資訊與營業時間：
-   - 📍 【店面地址】：台北市大安區和風禪意路 88 號 1 樓
-   - 📞 【聯絡電話】：02-2735-8899
-   - ⏰ 【營業時間】：週一至週日 11:00 - 19:30 (每週二為店休日，請注意不要白跑一趟喔！)
-4. 購物車與配送物流：
-   - 【如何購買】：在網頁下方的「臻品點心坊」中點擊「加入購物車」即可。點擊右上角的購物袋圖案可展開清單。
-   - 【免運優惠】：全台低溫配送，單筆訂單滿 $1,000 元即享免運費（未滿 $1,000 元運費為 $150 元）。
-   - 【模擬結帳】：點擊購物車清單底部的「模擬結帳」按鈕，可以體驗專屬的精緻和風結帳成功慶祝流程！
-5. 茶席搭配秘訣：
-   - 大福類：建議搭配帶有純粹麥香的「焙茶」或「玄米茶」。
-   - 手工生菓子：建議搭配甘苦交織、最純正的「宇治煎茶」或「日本濃抹茶」。
-   - 葛饅頭：最適合佐以清涼回甘的「冷泡煎茶」。
-
-【回答規範與限制】：
-- 如果顧客問及聯絡資訊、地址、電話、營業時間，請務必精確給予上述知識庫中的正確資訊。
-- 請注意！你主要只能回答與「饈菓子」和菓子專賣店、網站服務以及和菓子文化相關的話題。
-- 如果顧客詢問與本網站、饈菓子完全無關的政治、八卦或一般世俗瑣事，請委婉溫柔地婉拒回答，並引導他們品嚐和菓子。
-- 回答要精簡、條理分明，避免過長的段落。`;
-
-    const response = await fetch(apiURL, {
+    const response = await fetch(BACKEND_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: userPrompt }]
-          }
-        ],
-        systemInstruction: {
-          parts: [{ text: systemInstruction }]
-        },
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 800
-        }
-      })
+      body: JSON.stringify({ userPrompt })
     });
 
     if (!response.ok) {
-      throw new Error(`Gemini API HTTP error! status: ${response.status}`);
+      throw new Error(`Backend API error! status: ${response.status}`);
     }
 
     const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
+    // API 現在會回傳 { replyText, targetSectionId }
+    return data;
   }
 
   // 輔助函式：將 Markdown 轉為 HTML 顯示 (支援粗體與換行)
@@ -913,6 +821,50 @@ function initAIAssistant() {
     // 換行符轉成 <br>
     html = html.replace(/\n/g, '<br>');
     return html;
+  }
+
+  // 聚光燈特效與平滑捲動邏輯
+  function highlightSection(targetId) {
+    if (!targetId) return;
+    // 預防 AI 輸出帶有 # 號
+    if (targetId.startsWith('#')) {
+      targetId = targetId.substring(1);
+    }
+
+    let category = null;
+    if (targetId.startsWith('products-')) {
+      category = targetId.split('-')[1];
+      targetId = 'products';
+    }
+
+    const element = document.getElementById(targetId);
+    if (!element) return;
+
+    // 平滑捲動到目標區域的中央
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // 移除之前的聚光燈效果
+    document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
+    
+    // 加入新的聚光燈效果
+    element.classList.add('spotlight-focus');
+
+    // 如果有特定的產品分類，自動點擊分類頁籤
+    if (category) {
+      setTimeout(() => {
+        const btn = document.querySelector(`.filter-btn[data-filter="${category}"]`);
+        if (btn) {
+          btn.click();
+          // 如果正在滾動，讓焦點框能更好地包覆新顯現的產品
+          element.classList.add('spotlight-focus');
+        }
+      }, 600); // 延遲 600ms，等捲動到位後才自動切換頁籤，視覺更絲滑
+    }
+
+    // 3.5秒後自動解除 (配合 CSS 的 3.5s 動畫)
+    setTimeout(() => {
+      element.classList.remove('spotlight-focus');
+    }, 3500);
   }
 
   // 3. 發送訊息邏輯 (支援異步 Gemini API & 本地備份)
@@ -943,26 +895,35 @@ function initAIAssistant() {
     chatMessages.appendChild(typingDiv);
     scrollToBottom();
 
-    // C. 獲取回覆 (優先使用實體 Gemini 2.5 API，若無 API Key 則平滑降級為本地高智能關鍵字引擎)
+    // C. 獲取回覆 (優先呼叫後端 API，若後端未啟動或連線失敗，自動降級為本地關鍵字引擎)
     try {
-      let replyText = '';
-      if (GEMINI_API_KEY && GEMINI_API_KEY !== 'YOUR_GEMINI_API_KEY_HERE') {
-        replyText = await fetchGeminiResponse(text);
-      } else {
+      let replyData = null;
+      try {
+        replyData = await fetchGeminiResponse(text);
+      } catch (backendError) {
+        console.warn('Backend proxy is not responding, falling back to local engine:', backendError);
         // 模擬短暫打字延遲後使用本地關鍵字回覆
         await new Promise(resolve => setTimeout(resolve, 600 + Math.random() * 400));
-        replyText = getAIResponse(text);
+        replyData = getAIResponse(text);
       }
 
       // 移除 typing indicator
       typingDiv.remove();
 
+      // 解析文字與導航 ID (支援後端與本地端回傳格式)
+      const finalReplyText = replyData.replyText || replyData.text || '發生未知的回應錯誤。';
+      const targetId = replyData.targetSectionId || null;
+
       const aiMsgDiv = document.createElement('div');
       aiMsgDiv.className = 'message ai-message animate-fade-in';
-      aiMsgDiv.innerHTML = `<div class="message-content">${formatMarkdownToHTML(replyText)}</div>`;
+      aiMsgDiv.innerHTML = `<div class="message-content">${formatMarkdownToHTML(finalReplyText)}</div>`;
       chatMessages.appendChild(aiMsgDiv);
-      
       scrollToBottom();
+      
+      // D. 自動導航與聚光燈效果
+      if (targetId) {
+        highlightSection(targetId);
+      }
     } catch (error) {
       console.error('AI Response Error:', error);
       typingDiv.remove();
