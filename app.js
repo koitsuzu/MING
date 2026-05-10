@@ -32,14 +32,40 @@ function initSpotlightTutorial() {
 // 暴露到全域，方便 AI Assistant 呼叫
 window.activateSpotlight = function(selector) {
   if (!selector) return;
+  
+  // 主動切換產品系列頁籤邏輯
+  if (selector.includes('data-id=')) {
+    let categoryToClick = null;
+    if (selector.includes('namagashi')) categoryToClick = 'namagashi';
+    else if (selector.includes('yokan')) categoryToClick = 'yokan';
+    else if (selector.includes('daifuku')) categoryToClick = 'daifuku';
+    else if (selector.includes('dango')) categoryToClick = 'dango';
+    else if (selector.includes('classic')) categoryToClick = 'classic';
+    
+    if (categoryToClick) {
+      const activeBtn = document.querySelector('.filter-btn.active');
+      // 如果當前頁籤不是目標頁籤，就幫使用者點擊切換！
+      if (activeBtn && activeBtn.dataset.filter !== categoryToClick) {
+        const catBtn = document.querySelector(`.filter-btn[data-filter="${categoryToClick}"]`);
+        if (catBtn) {
+          catBtn.click();
+          // 等待 DOM 重新渲染後再次嘗試聚焦
+          setTimeout(() => {
+            window.activateSpotlight(selector);
+          }, 150);
+          return; // 終止這次執行，等 150ms 後由遞迴接手
+        }
+      }
+    }
+  }
+
   let target = document.querySelector(selector);
   
-  // 如果找不到商品元素，代表可能被其他分類標籤隱藏了，強制切換回「全部臻品」標籤
+  // 萬一還是找不到，可能被隱藏，做最後防護切回全部
   if (!target && selector.includes('data-id')) {
     const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
     if (allBtn) {
       allBtn.click();
-      // 等待 DOM 重新渲染後再次嘗試聚焦
       setTimeout(() => {
         window.activateSpotlight(selector);
       }, 150);
@@ -795,88 +821,121 @@ function initAIAssistant() {
 
     // 20週年紀念
     if (text.includes('20') || text.includes('二十') || text.includes('周年') || text.includes('週年')) {
-      return `🎉 饈菓子 20 週年紀念特別企劃：
+      return {
+        replyText: `🎉 饈菓子 20 週年紀念特別企劃：
       自 2003 年創立以來，我們已與無數饕客共度了 20 年的甜蜜歲月。
       
-      今年我們特別推出了全新的「20週年櫻綻限定版大福」，融合金箔與櫻花甘露，感謝您一路上對我們的支持！您可以在頂部看板的大圖中一睹它的絕美風采喔！`;
+      今年我們特別推出了全新的「20週年櫻綻限定版大福」，融合金箔與櫻花甘露，感謝您一路上對我們的支持！您可以在頂部看板的大圖中一睹它的絕美風采喔！`,
+        targetSelector: '#hero'
+      };
     }
 
-    // 大福與經典點心
-    if (text.includes('大福') || text.includes('櫻綻') || text.includes('草莓') || text.includes('點心') || text.includes('商品') || text.includes('甜點')) {
-      return `🌸 臻品推薦：
-      1. 【櫻綻大福】($180)：融合當季櫻花瓣與特製生餡，金箔點綴，層次細膩高雅。
-      2. 【草莓大福】($150)：嚴選新鮮大草莓與京都十勝紅豆餡，酸甜適口。
+    // 1. 大福系列與商品
+    if (text.includes('草莓大福') || text.includes('草莓')) {
+      return {
+        replyText: `🍓 嚴選新鮮大草莓：【十勝紅豆草莓大福】($90)
       
-      您可以在網頁下方的「臻品點心坊」中點擊「加入購物車」進行模擬購買喔！`;
+      嚴選新鮮大草莓與京都十勝紅豆餡，酸甜適口。每一口都能嘗到草莓的清香與豆沙的綿密！`,
+        targetSelector: "[data-id='daifuku-1']"
+      };
+    }
+    if (text.includes('櫻綻大福') || text.includes('櫻花大福') || text.includes('櫻綻') || text.includes('櫻花')) {
+      return {
+        replyText: `🌸 絕美高雅逸品：【鹽漬八重櫻大福】($95)
+      
+      融合當季櫻花瓣與特製生餡，Q彈綻芬芳。是最受歡迎的春季經典！`,
+        targetSelector: "[data-id='daifuku-2']"
+      };
+    }
+    if (text.includes('大福')) {
+      return {
+        replyText: `🌸 臻品大福系列推薦：
+      我們有最受歡迎的【櫻綻大福】、【草莓大福】、【濃抹茶大福】等經典系列，每一口都是極致享受。
+      
+      已為您自動引導切換到「大福系列」，快來挑選您心儀的點心吧！`,
+        targetSelector: ".filter-btn[data-filter='daifuku']"
+      };
     }
 
-    // 生菓子與三角棒
-    if (text.includes('生菓子') || text.includes('手工') || text.includes('三角棒') || text.includes('雕刻') || text.includes('藝術') || text.includes('工藝') || text.includes('職人')) {
+    // 2. 生菓子系列
+    if (text.includes('生菓子') || text.includes('手工') || text.includes('三角棒') || text.includes('雕刻') || text.includes('工藝') || text.includes('職人')) {
       return { 
-        replyText: `✨ 職人代表作：【三角棒手作生菓子】($220)
+        replyText: `✨ 職人代表作：【手作櫻綻・生菓子】($180)
       
-      每一顆都是職人運用祖傳三角棒，經由揉、捏、壓、切等數十道工序精細雕刻而成。它將四季的流轉（如春櫻、秋楓、冬雪）具象化，呈現極致的和風禪意。
+      每一顆都是職人運用祖傳三角棒，將四季的流轉（如松風落雪、翠竹流年）具象化，呈現極致的和風禪意。
       
-      您可以在「職人故事」區塊中，一覽這門傳承數百年的指尖藝術。`,
-        targetSelector: '#about'
+      已為您自動引導切換到「生菓子系列」，您可以一覽這門傳承數百年的指尖藝術。`,
+        targetSelector: "[data-id='namagashi-1']"
       };
     }
 
-    // 葛饅頭
-    if (text.includes('葛') || text.includes('饅頭') || text.includes('五山送火') || text.includes('涼') || text.includes('消暑') || text.includes('夏天')) {
+    // 3. 羊羹系列
+    if (text.includes('羊羹') || text.includes('清泉錦鯉') || text.includes('金栗')) {
       return {
-        replyText: `🍃 涼夏逸品：【五山送火葛饅頭】($160)
+        replyText: `🎋 絕代風雅：【清泉錦鯉羊羹】($240)
       
-      選用京都頂級葛粉製成半透明外皮，包覆細滑手工豆沙。
-      質地晶瑩剔透、入口即化，帶給您沁人心脾的清爽口感，是夏日茶席上最受歡迎的消暑極品。`,
-        targetSelector: '#products'
+      晶瑩剔透的瓊脂中，巧妙鑲嵌手工熬製的豆沙錦鯉，猶如溪水中跳躍的流光。搭配【金栗凝脂羊羹】，是品茗的上乘之選。
+      
+      已為您自動引導切換到「羊羹系列」，請細細品味視覺與味覺的雙重盛宴。`,
+        targetSelector: ".filter-btn[data-filter='yokan']"
       };
     }
 
-    // 禮盒
-    if (text.includes('禮盒') || text.includes('送禮') || text.includes('禮') || text.includes('伴手禮')) {
+    // 4. 糰子系列
+    if (text.includes('糰子') || text.includes('團子') || text.includes('三色') || text.includes('醬油')) {
       return {
-        replyText: `🎁 精緻送禮首選：【四季和菓子禮盒】($880)
+        replyText: `🍡 療癒和風：【春遊極致三色糰子】($80)
       
-      內含本店最暢銷的櫻綻大福、手工生菓子與葛饅頭，並採用日本進口友禪紙手工包裝。
-      精緻大氣，呈現最高貴優雅的饈菓子美學，是致贈長輩或貴賓的完美首選。`,
-        targetSelector: '#products'
+      復刻兒時的賞櫻滋味！還有甜中帶鹹的【古法焦香甜醬油糰子】，以及超人氣的萌動可愛熊糰子，讓您的味蕾跟著一起快樂跳舞。
+      
+      已為您引導至「糰子系列」，一起感受最樸實的日式美味！`,
+        targetSelector: "[data-id='dango-1']"
+      };
+    }
+
+    // 5. 禮盒與伴手禮
+    if (text.includes('禮盒') || text.includes('送禮') || text.includes('伴手禮') || text.includes('經典')) {
+      return {
+        replyText: `🎁 精緻送禮首選：【八重櫻御賞禮盒】($450)
+      
+      內含精選和菓子並採用日本進口友禪紙手工包裝。大器優雅，呈現饈菓子美學，是致贈貴賓的完美之選。
+      
+      已為您引導至「經典和菓子系列」查看更多頂級獻禮！`,
+        targetSelector: "[data-id='classic-1']"
       };
     }
 
     // 茶席配對 / 搭配
-    if (text.includes('茶') || text.includes('搭配') || text.includes('配對') || text.includes('茶席') || text.includes('抹茶') || text.includes('焙茶') || text.includes('煎茶') || text.includes('玄米茶')) {
+    if (text.includes('茶') || text.includes('搭配') || text.includes('配對') || text.includes('茶席') || text.includes('抹茶') || text.includes('焙茶') || text.includes('煎茶')) {
       return {
         replyText: `🍵 饈菓子獨家茶席搭配秘訣：
-      1. 【大福類】建議搭配「焙茶」或「玄米茶」，能完美帶出豆沙的純粹麥香。
-      2. 【生菓子】是「宇治煎茶」或「日本濃抹茶」的絕配，甘苦交織、一期一會。
-      3. 【葛饅頭】適合佐以「冷泡煎茶」，入口清涼回甘。
+      1. 【大福類】建議搭配「焙茶」或「玄米茶」，完美帶出豆沙純粹麥香。
+      2. 【生菓子】與「日本濃抹茶」是絕配，甘苦交織。
       
-      網頁中段設有「茶席配對」互動遊戲，歡迎您親自配對，還可以獲得推薦的專屬茶譜喔！`,
+      網頁設有「茶席配對」互動遊戲，快來測測您的專屬茶譜！`,
         targetSelector: '#interactive-game'
       };
     }
 
-    // 四大堅持 / 品牌精神 / 理念
-    if (text.includes('堅持') || text.includes('四大') || text.includes('精神') || text.includes('理念') || text.includes('品牌') || text.includes('特色') || text.includes('關於')) {
+    // 四大堅持 / 品牌精神
+    if (text.includes('堅持') || text.includes('精神') || text.includes('理念') || text.includes('關於')) {
       return {
-        replyText: `📜 饈菓子的四大品牌堅持：
-      1. 【純天然食材】：絕無人工色素，用植物天然原色演繹極致色彩。
-      2. 【當日現做】：每日凌晨手工限量製作，封存最鮮甜的一刻。
-      3. 【極致禪意】：將俳句、和歌與庭園山水融入造型，體現日式生活哲學。
-      4. 【一期一會】：每一次與您的相遇，我們都傾注一生的心意，為您呈現完美之作。`,
+        replyText: `📜 饈菓子的品牌精神：
+      1. 【純天然食材】：絕無人工色素。
+      2. 【當日現做】：封存最新鮮的一刻。
+      3. 【極致禪意】：體現日式哲學。
+      4. 【一期一會】：傾注一生的心意奉茶服務。`,
         targetSelector: '#about'
       };
     }
 
-    // 購買 / 配送 / 運費 / 購物車 / 結帳
-    if (text.includes('買') || text.includes('購買') || text.includes('配送') || text.includes('運費') || text.includes('購物') || text.includes('結帳') || text.includes('加入購物車')) {
+    // 購物流程
+    if (text.includes('買') || text.includes('購買') || text.includes('運費') || text.includes('結帳') || text.includes('加入購物車')) {
       return {
-        replyText: `📦 購物與配送說明：
-      1. 【如何購買】：在「臻品點心坊」中，點擊任何產品下的「加入購物車」。
-      2. 【查看商品】：點擊右上角兔子助理旁的「購物袋」即可展開清單。
-      3. 【配送服務】：滿 $1,000 元即可享受低溫宅配免運費服務，當日製作、隔日低溫新鮮送達。
-      4. 【結帳流程】：在購物車清單中點擊「模擬結帳」即可體驗專屬的精緻和風結帳體驗！`,
+        replyText: `📦 購物說明：
+      1. 點擊產品下的「加入購物車」。
+      2. 點擊右上角購物袋展開清單進行模擬結帳。
+      3. 滿 $1,000 元即可享受新鮮低溫免運宅配！`,
         targetSelector: '#cart-btn'
       };
     }

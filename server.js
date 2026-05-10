@@ -60,26 +60,39 @@ app.post('/api/chat', async (req, res) => {
 
 【必須遵守的回覆格式限制 (CRITICAL)】：
 你必須強制以 JSON 格式回覆，絕對不要包含 Markdown \`\`\`json 標籤或任何其他純文字前綴後綴。
-請根據你回答的內容，提供最合適的網頁對應區塊 CSS Selector 作為 targetSelector，這將會用於「新手導覽聚光燈」特效。
+請根據你回答的內容，提供最合適的網頁對應區塊 CSS Selector 作為 targetSelector。
 
-【可用的 targetSelector 對照表 (請盡量精確到單一商品)】：
-- 若提及「20週年活動」： "#hero"
-- 若提及「櫻綻大福/櫻花大福」： "[data-id='daifuku-2']"
-- 若提及「草莓大福」： "[data-id='daifuku-1']"
-- 若提及「三角棒手作生菓子/生菓子/工藝」： "[data-id='namagashi-1']"
-- 若提及「葛饅頭/五山送火/夏日甜點」： "[data-id='namagashi-5']"
-- 若廣泛提及「商品推薦/伴手禮/禮盒」： "#products"
-- 若提及「茶席配對遊戲/抹茶/焙茶」： "#interactive-game"
-- 若提及「品牌理念/四大堅持」： "#about"
-- 若提及「聯絡方式/地址/營業時間」： ".footer-contact-column"
-- 若提及「購物車/免運/配送/結帳」： "#cart-btn"
-- 若無特定對應區塊，或僅為一般問候： null
+【可用的 targetSelector 參考對照表】：
+1. 頂級活動區：
+   - 20週年活動: "#hero"
+2. 商品類別頁籤 (當用戶問的是整個類別，或沒有提到具體商品時)：
+   - 生菓子系列: ".filter-btn[data-filter='namagashi']"
+   - 羊羹系列: ".filter-btn[data-filter='yokan']"
+   - 大福系列: ".filter-btn[data-filter='daifuku']"
+   - 糰子系列: ".filter-btn[data-filter='dango']"
+   - 經典和菓子系列: ".filter-btn[data-filter='classic']"
+3. 特定商品卡片 (最優先，請盡量打光在具體商品上)：
+   - 手作櫻綻生菓子 / 雕刻工藝: "[data-id='namagashi-1']"
+   - 松風落雪 / 翠竹流年 / 紅豆沙山: "[data-id='namagashi-2']", "[data-id='namagashi-3']", "[data-id='namagashi-4']"
+   - 秋楓霜露 / 菊綻金秋 / 葛饅頭: "[data-id='namagashi-5']", "[data-id='namagashi-6']"
+   - 金栗凝脂羊羹: "[data-id='yokan-1']"
+   - 宇治抹茶羊羹 / 清泉錦鯉羊羹 / 黑糖羊羹: "[data-id='yokan-2']", "[data-id='yokan-3']", "[data-id='yokan-4']"
+   - 十勝紅豆草莓大福 / 草莓大福: "[data-id='daifuku-1']"
+   - 鹽漬八重櫻大福 / 櫻綻大福 / 櫻花大福: "[data-id='daifuku-2']"
+   - 靜岡濃抹茶大福 / 溫潤黑芝麻大福: "[data-id='daifuku-3']", "[data-id='daifuku-4']"
+   - 春遊極致三色糰子 / 糰子 / 團子: "[data-id='dango-1']"
+   - 焦香甜醬油糰子 / 萌動可愛熊糰子: "[data-id='dango-2']", "[data-id='dango-3']"
+   - 八重櫻御賞禮盒 / 伴手禮 / 送禮: "[data-id='classic-1']"
+   - 手作金栗燒 / 紅豆御中原: "[data-id='classic-2']", "[data-id='classic-3']"
+4. 功能與資訊區塊：
+   - 茶席配對遊戲/搭配抹茶: "#interactive-game"
+   - 品牌理念/四大堅持: "#about"
+   - 聯絡方式/店址/營業時間: ".footer-contact-column"
+   - 購物車/免運/結帳: "#cart-btn"
+5. 若無特定對應區塊，或僅為一般哈囉問候： null
 
-【回覆 JSON 範例】：
-{
-  "replyText": "這裡填寫原本親切、帶有表情符號的回覆內容...",
-  "targetSelector": "#about"
-}`;
+注意：如果你提到了多個商品，請挑選「最主要那一個」或是對應的「商品類別頁籤」作為聚焦目標。絕對不要瞎編不存在的 selector！
+JSON 格式範例： {"replyText": "您的回答內容", "targetSelector": "[data-id='daifuku-1']"}`;
 
     const response = await fetch(apiURL, {
       method: 'POST',
