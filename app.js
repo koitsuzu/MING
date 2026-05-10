@@ -917,25 +917,47 @@ function initAIAssistant() {
       };
     }
 
-    // 四大堅持 / 品牌精神
-    if (text.includes('堅持') || text.includes('精神') || text.includes('理念') || text.includes('關於')) {
+    // 四大堅持 (優先序拉高，避免被包含「精神」二字的句子誤導到品牌故事)
+    if (text.includes('堅持') || text.includes('特色')) {
       return {
-        replyText: `📜 饈菓子的品牌精神：
+        replyText: `🌟 饈菓子的四大品牌堅持：
       1. 【純天然食材】：絕無人工色素。
       2. 【當日現做】：封存最新鮮的一刻。
-      3. 【極致禪意】：體現日式哲學。
-      4. 【一期一會】：傾注一生的心意奉茶服務。`,
+      3. 【極致禪意】：體現極致生活哲學。
+      4. 【一期一會】：傾注一生的熱情與心意。
+      
+      已為您打光聚焦在頂部的「四大堅持」專區！`,
+        targetSelector: '.featured-section'
+      };
+    }
+
+    // 品牌故事 / 職人精神
+    if (text.includes('精神') || text.includes('故事') || text.includes('理念') || text.includes('關於')) {
+      return {
+        replyText: `📜 饈菓子的職人故事：
+      傳承百年的頂級手藝，將四季的流轉融入每一顆菓子。堅持「一期一會」的初心，用一生的心意為您呈現最極致的和風美學。
+      
+      已為您引導至「職人故事」區塊，帶您深入探索我們的品牌深度！`,
         targetSelector: '#about'
       };
     }
 
-    // 購物流程
-    if (text.includes('買') || text.includes('購買') || text.includes('運費') || text.includes('結帳') || text.includes('加入購物車')) {
+    // 購物流程 - 如何加入購物車 (優先判定具體按鈕)
+    if (text.includes('加入購物車') || text.includes('怎麼買') || text.includes('如何買')) {
       return {
-        replyText: `📦 購物說明：
-      1. 點擊產品下的「加入購物車」。
-      2. 點擊右上角購物袋展開清單進行模擬結帳。
-      3. 滿 $1,000 元即可享受新鮮低溫免運宅配！`,
+        replyText: `📦 如何購買說明：
+      請在看中的點心卡片右下角，點擊【加入購物車】圓形按鈕（已為您打光圈選範例按鈕），該商品就會優雅地滑入您的購物袋中囉！`,
+        targetSelector: "[data-id='daifuku-1'] .btn-add-cart"
+      };
+    }
+
+    // 購物流程 - 結帳/運費/購物車查看
+    if (text.includes('買') || text.includes('購買') || text.includes('運費') || text.includes('結帳') || text.includes('購物車')) {
+      return {
+        replyText: `🛒 購物車與配送說明：
+      1. 點擊右上角兔子旁的「購物袋圖示」可展開您的採購清單。
+      2. 在清單下方點擊【模擬結帳】即可體驗流程。
+      3. 訂單滿 $1,000 元即可享有低溫免運優惠！`,
         targetSelector: '#cart-btn'
       };
     }

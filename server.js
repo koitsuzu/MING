@@ -86,9 +86,11 @@ app.post('/api/chat', async (req, res) => {
    - 手作金栗燒 / 紅豆御中原: "[data-id='classic-2']", "[data-id='classic-3']"
 4. 功能與資訊區塊：
    - 茶席配對遊戲/搭配抹茶: "#interactive-game"
-   - 品牌理念/四大堅持: "#about"
+   - 品牌理念 / 品牌故事 / 職人故事: "#about"
+   - 四大堅持 / 精選特色: ".featured-section"
    - 聯絡方式/店址/營業時間: ".footer-contact-column"
-   - 購物車/免運/結帳: "#cart-btn"
+   - 購物車/免運/結帳/查看清單: "#cart-btn"
+   - 如何加入購物車 / 如何購買 / 怎麼買: "[data-id='daifuku-1'] .btn-add-cart"
 5. 若無特定對應區塊，或僅為一般哈囉問候： null
 
 注意：如果你提到了多個商品，請挑選「最主要那一個」或是對應的「商品類別頁籤」作為聚焦目標。絕對不要瞎編不存在的 selector！
