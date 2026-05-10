@@ -515,8 +515,6 @@ body {
   padding: 80px 0 120px 0;
   background-color: var(--color-surface-muted);
   position: relative;
-  border-top: none !important;
-  border-bottom: none !important;
 }
 
 .text-center {
@@ -677,8 +675,6 @@ body {
   background-size: cover;
   background-position: center;
   position: relative;
-  border-top: none !important;
-  border-bottom: none !important;
 }
 
 .game-wrapper {
@@ -1370,7 +1366,6 @@ body {
 
 .zen-wave-divider.bottom-wave {
   bottom: 0;
-  transform: translateY(1.5px); /* 🚀 強制下壓，消滅所有潛在的 1px 渲染橫線 artifacts */
 }
 
 .zen-wave-divider.top-wave {
