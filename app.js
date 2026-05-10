@@ -858,7 +858,7 @@ function initAIAssistant() {
     }
 
     // 2. 生菓子系列
-    if (text.includes('生菓子') || text.includes('手工') || text.includes('三角棒') || text.includes('雕刻') || text.includes('工藝') || text.includes('職人')) {
+    if (text.includes('生菓子') || text.includes('生果子') || text.includes('手工') || text.includes('三角棒') || text.includes('雕刻') || text.includes('工藝') || text.includes('職人')) {
       return { 
         replyText: `✨ 職人代表作：【手作櫻綻・生菓子】($180)
       
@@ -894,7 +894,7 @@ function initAIAssistant() {
     }
 
     // 5. 禮盒與伴手禮
-    if (text.includes('禮盒') || text.includes('送禮') || text.includes('伴手禮') || text.includes('經典')) {
+    if (text.includes('禮盒') || text.includes('送禮') || text.includes('伴手禮') || text.includes('經典') || text.includes('和菓子') || text.includes('和果子')) {
       return {
         replyText: `🎁 精緻送禮首選：【八重櫻御賞禮盒】($450)
       

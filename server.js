@@ -66,13 +66,13 @@ app.post('/api/chat', async (req, res) => {
 1. 頂級活動區：
    - 20週年活動: "#hero"
 2. 商品類別頁籤 (當用戶問的是整個類別，或沒有提到具體商品時)：
-   - 生菓子系列: ".filter-btn[data-filter='namagashi']"
+   - 生菓子系列 / 生果子: ".filter-btn[data-filter='namagashi']"
    - 羊羹系列: ".filter-btn[data-filter='yokan']"
    - 大福系列: ".filter-btn[data-filter='daifuku']"
    - 糰子系列: ".filter-btn[data-filter='dango']"
-   - 經典和菓子系列: ".filter-btn[data-filter='classic']"
+   - 經典和菓子系列 / 和果子: ".filter-btn[data-filter='classic']"
 3. 特定商品卡片 (最優先，請盡量打光在具體商品上)：
-   - 手作櫻綻生菓子 / 雕刻工藝: "[data-id='namagashi-1']"
+   - 手作櫻綻生菓子 / 雕刻工藝 / 藝術: "[data-id='namagashi-1']"
    - 松風落雪 / 翠竹流年 / 紅豆沙山: "[data-id='namagashi-2']", "[data-id='namagashi-3']", "[data-id='namagashi-4']"
    - 秋楓霜露 / 菊綻金秋 / 葛饅頭: "[data-id='namagashi-5']", "[data-id='namagashi-6']"
    - 金栗凝脂羊羹: "[data-id='yokan-1']"
