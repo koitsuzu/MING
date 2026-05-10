@@ -58,28 +58,28 @@ app.post('/api/chat', async (req, res) => {
 - 如果顧客詢問與本網站、饈菓子完全無關的政治、八卦或一般世俗瑣事，請委婉溫柔地婉拒回答，並引導他們品嚐和菓子。
 - 回答要精簡、條理分明，避免過長的段落。
 
-【動態導航指引 (DOM ID Mapping)】：
-你必須根據顧客詢問的內容，判斷最適合引導他們查看的網頁區塊，並回傳對應的 HTML ID (targetSectionId)。
-- 如果是問候、20週年活動或無特定對象 -> 回傳 "hero"
-- 如果是詢問大福 -> 回傳 "products-daifuku"
-- 如果是詢問生菓子 -> 回傳 "products-namagashi"
-- 如果是詢問羊羹 -> 回傳 "products-yokan"
-- 如果是詢問糰子、糰子系列 -> 回傳 "products-dango"
-- 如果是詢問經典和菓子、其他產品 -> 回傳 "products-classic"
-- 如果是詢問一般產品列表、價格、購買 -> 回傳 "products"
-- 如果是詢問茶席搭配、互動測驗 -> 回傳 "interactive-game"
-- 如果是詢問品牌堅持、四大堅持、理念 -> 回傳 "featured"
-- 如果是詢問職人精神、關於我們、三角棒工藝 -> 回傳 "about"
-- 如果是詢問聯絡方式、地址、電話、營業時間 -> 回傳 "footer-contact"
-- 若無對應則回傳 null。
+【必須遵守的回覆格式限制 (CRITICAL)】：
+你必須強制以 JSON 格式回覆，絕對不要包含 Markdown \`\`\`json 標籤或任何其他純文字前綴後綴。
+請根據你回答的內容，提供最合適的網頁對應區塊 CSS Selector 作為 targetSelector，這將會用於「新手導覽聚光燈」特效。
 
-【強制輸出格式】：
-請絕對、務必只輸出符合以下結構的 JSON 格式（不要加上任何 markdown 標記，直接輸出 JSON 物件）：
+【可用的 targetSelector 對照表 (請盡量精確到單一商品)】：
+- 若提及「20週年活動」： "#hero"
+- 若提及「櫻綻大福/櫻花大福」： "[data-id='daifuku-2']"
+- 若提及「草莓大福」： "[data-id='daifuku-1']"
+- 若提及「三角棒手作生菓子/生菓子/工藝」： "[data-id='namagashi-1']"
+- 若提及「葛饅頭/五山送火/夏日甜點」： "[data-id='namagashi-5']"
+- 若廣泛提及「商品推薦/伴手禮/禮盒」： "#products"
+- 若提及「茶席配對遊戲/抹茶/焙茶」： "#interactive-game"
+- 若提及「品牌理念/四大堅持」： "#about"
+- 若提及「聯絡方式/地址/營業時間」： ".footer-contact-column"
+- 若提及「購物車/免運/配送/結帳」： "#cart-btn"
+- 若無特定對應區塊，或僅為一般問候： null
+
+【回覆 JSON 範例】：
 {
-  "replyText": "你的精美回答內容，支援 markdown...",
-  "targetSectionId": "對應的網頁 ID 字串或 null"
-}
-`;
+  "replyText": "這裡填寫原本親切、帶有表情符號的回覆內容...",
+  "targetSelector": "#about"
+}`;
 
     const response = await fetch(apiURL, {
       method: 'POST',
@@ -97,9 +97,8 @@ app.post('/api/chat', async (req, res) => {
           parts: [{ text: systemInstruction }]
         },
         generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 800,
-          responseMimeType: "application/json"
+          temperature: 0.2, // 降低溫度以確保 JSON 格式穩定
+          maxOutputTokens: 800
         }
       })
     });
@@ -110,8 +109,12 @@ app.post('/api/chat', async (req, res) => {
     }
 
     const data = await response.json();
-    const jsonString = data.candidates[0].content.parts[0].text;
-    const parsedData = JSON.parse(jsonString);
+    let rawText = data.candidates[0].content.parts[0].text;
+    
+    // 清除可能殘留的 markdown json 標記
+    rawText = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+    
+    const parsedData = JSON.parse(rawText);
     res.json(parsedData);
 
   } catch (error) {

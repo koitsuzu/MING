@@ -1808,35 +1808,33 @@ body {
   }
 }
 
-/* AI 導航聚光燈特效 (Spotlight Focus) */
-@keyframes spotlightFlash {
-  0% { 
-    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0);
-    outline-color: rgba(168, 86, 84, 0);
-    background-color: rgba(168, 86, 84, 0);
-  }
-  15% { 
-    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
-    outline-color: rgba(168, 86, 84, 0.8);
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  85% { 
-    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
-    outline-color: rgba(168, 86, 84, 0.8);
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  100% { 
-    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0);
-    outline-color: rgba(168, 86, 84, 0);
-    background-color: rgba(168, 86, 84, 0);
-  }
+/* 新手導覽聚光燈特效 (Spotlight Tutorial) */
+.spotlight-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 8000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
 }
-
+.spotlight-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
 .spotlight-focus {
-  position: relative;
-  z-index: 998 !important; /* 低於對話視窗 (z-index: 999) 但高於其餘網頁所有板塊 */
-  outline: 4px solid transparent;
-  outline-offset: -4px;
-  border-radius: 12px;
-  animation: spotlightFlash 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+  position: relative !important;
+  z-index: 8001 !important;
+  /* 移除強制白色背景，保留元素原本的背景與文字顏色 */
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 0 0 0 4px rgba(234, 182, 193, 0.5) !important;
+  transition: all 0.5s ease;
+  animation: pulse-glow 2.5s infinite;
+  pointer-events: auto !important;
+}
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 0 2px rgba(234, 182, 193, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(255, 255, 255, 1), 0 0 0 6px rgba(234, 182, 193, 0.8); transform: scale(1.02); }
+  100% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 0 2px rgba(234, 182, 193, 0.3); }
 }
