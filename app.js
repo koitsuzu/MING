@@ -273,7 +273,7 @@ const productDatabase = [
     id: 'namagashi-1',
     name: '手作櫻綻・生菓子',
     category: 'namagashi',
-    image: 'image/生菓子產品圖/namagashi.png',
+    image: 'image/生菓子產品圖/p6.jpg',
     price: 180,
     haiku: '春風拂面處，緋櫻初綻放',
     badge: 'image/推薦與精選/best1.png'
@@ -329,7 +329,7 @@ const productDatabase = [
     id: 'yokan-1',
     name: '金栗凝脂羊羹',
     category: 'yokan',
-    image: 'image/羊羹產品圖/yokan.png',
+    image: 'image/羊羹產品圖/y4.jpg',
     price: 220,
     haiku: '晶瑩如美玉，金栗嵌秋風',
     badge: 'image/推薦與精選/best2.png'
@@ -405,7 +405,7 @@ const productDatabase = [
     id: 'dango-1',
     name: '春遊極致三色糰子',
     category: 'dango',
-    image: 'image/團子產品圖/dango.png',
+    image: 'image/團子產品圖/d7.jpg',
     price: 80,
     haiku: '紅綠白三色，童年春遊夢',
     badge: 'image/推薦與精選/best4.png'
@@ -414,7 +414,7 @@ const productDatabase = [
     id: 'dango-2',
     name: '古法焦香甜醬油糰子',
     category: 'dango',
-    image: 'image/團子產品圖/01.jpg',
+    image: 'image/團子產品圖/d9.jpg',
     price: 75,
     haiku: '微焦糰子串，甜醬油香溢',
     badge: ''
