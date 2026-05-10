@@ -59,56 +59,75 @@ window.activateSpotlight = function(selector) {
     }
   }
 
-  let targets = document.querySelectorAll(selector);
-  
-  // 萬一還是找不到，可能被隱藏（例如被分類篩選掉了），做最後防護切回「全部」
-  if (targets.length === 0 && selector.includes('data-id')) {
+  // 【核心升級】：如果是導航到具體商品，強制切回「全部」頁籤以保證跨類別的所有商品都在 DOM 中可供查詢
+  if (selector.includes('data-id')) {
     const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
-    if (allBtn) {
+    if (allBtn && !allBtn.classList.contains('active')) {
       allBtn.click();
+      // 等待 DOM 過濾渲染動畫完畢，重新遞迴執行此流程
       setTimeout(() => {
         window.activateSpotlight(selector);
-      }, 150);
+      }, 300);
       return;
     }
   }
 
+  const targets = document.querySelectorAll(selector);
   if (targets.length === 0) return;
 
   const overlay = document.getElementById('spotlight-overlay');
+  const targetsArray = Array.from(targets);
   
-  // 清除舊的 spotlight 狀態
+  // 清除舊的狀態與排程 handle
+  clearTimeout(spotlightTimeout);
   document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
   document.querySelectorAll('.spotlight-btn-pulse').forEach(el => el.classList.remove('spotlight-btn-pulse'));
-  clearTimeout(spotlightTimeout);
 
-  // 1. 平滑捲動至第一個目標
-  targets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // 定義「依序循序導覽」遞迴排程
+  function runTourStep(index) {
+    // 已經全部巡禮完畢
+    if (index >= targetsArray.length) {
+      spotlightTimeout = setTimeout(() => {
+        window.clearSpotlight();
+      }, 3500);
+      return;
+    }
 
-  // 2. 開啟聚光燈，針對所有匹配元素進行打光
-  setTimeout(() => {
-    overlay.classList.add('active');
-    
-    targets.forEach(target => {
-      // 如果是按鈕等深層子元素，將其包含的整個卡片一併浮上來
-      const parentCard = target.closest('.product-card');
-      if (parentCard && parentCard !== target) {
+    // 清空前一個導覽點的類別，但保留 overlay 的 active
+    document.querySelectorAll('.spotlight-focus').forEach(el => el.classList.remove('spotlight-focus'));
+    document.querySelectorAll('.spotlight-btn-pulse').forEach(el => el.classList.remove('spotlight-btn-pulse'));
+
+    const currentTarget = targetsArray[index];
+    overlay.classList.add('active'); // 帷幕啟動
+
+    // 1. 平滑捲動至目前焦點
+    currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // 2. 稍微等待捲動到位後才亮燈
+    spotlightTimeout = setTimeout(() => {
+      // ⚠️ 安全熔斷機制：如果這 500ms 間使用者手動關閉了帷幕，終止這輪導覽
+      if (!overlay.classList.contains('active')) return;
+
+      const parentCard = currentTarget.closest('.product-card');
+      if (parentCard && parentCard !== currentTarget) {
         parentCard.classList.add('spotlight-focus');
       }
-      
-      target.classList.add('spotlight-focus');
+      currentTarget.classList.add('spotlight-focus');
 
-      // 如果是加入購物車按鈕，額外觸發專屬強烈跳動提示
-      if (target.classList.contains('btn-add-cart') || target.classList.contains('add-to-cart-trigger')) {
-        target.classList.add('spotlight-btn-pulse');
+      // 額外加入按鈕高亮邏輯
+      if (currentTarget.classList.contains('btn-add-cart') || currentTarget.classList.contains('add-to-cart-trigger')) {
+        currentTarget.classList.add('spotlight-btn-pulse');
       }
-    });
-    
-    // 3.5 秒後自動解除
-    spotlightTimeout = setTimeout(() => {
-      window.clearSpotlight();
-    }, 3500);
-  }, 400); // 稍微等待捲動動畫
+
+      // 停留 3.5 秒讓用戶閱讀，隨即遞迴進入下一個
+      spotlightTimeout = setTimeout(() => {
+        runTourStep(index + 1);
+      }, 3500);
+    }, 500);
+  }
+
+  // 正式引爆全自動點心觀光導覽行程！
+  runTourStep(0);
 };
 
 window.clearSpotlight = function() {
@@ -862,7 +881,7 @@ function initAIAssistant() {
       1. 【宇治抹茶羊羹】：凝脂般晶瑩，回甘無窮。
       2. 【靜岡濃抹茶大福】：濃郁苦甜，飽滿茶香。
       
-      已同步為您「全域打亮」這兩款熱銷的抹茶臻品供您比較！`,
+      已啟動「自動導覽系統」，正依序帶您參訪這兩款絕佳抹茶臻品供您鑑賞！`,
         targetSelector: "[data-id='yokan-2'], [data-id='daifuku-3']"
       };
     }

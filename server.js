@@ -107,7 +107,7 @@ app.post('/api/chat', async (req, res) => {
 
 5. ❓ 若無明確對應，或是一般哈囉閒聊： null
 
-注意：你現在可以一次「打光多個商品」來向顧客做強力的視覺化推薦！只需在 targetSelector 字串內將它們用逗號隔開即可。
+注意：你現在可以一次傳回多個商品 ID（用逗號隔開），系統將會自動為顧客開啟「產品依序自動導覽系統」，按順序逐一捲動並亮起該產品！
 JSON 格式範例： {"replyText": "您的回答內容", "targetSelector": "[data-id='yokan-2'], [data-id='daifuku-3']"}`;
 
     const response = await fetch(apiURL, {
