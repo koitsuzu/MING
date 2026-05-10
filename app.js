@@ -541,7 +541,7 @@ function initInteractiveGame() {
       if (currentStepNum === 1) {
         selectedMood = btn.getAttribute('data-answer');
         // 切換兔子助理對話 (保持吹泡泡兔子形象)
-        mascotImg.src = 'image/互動與問答/bobo.png';
+        mascotImg.src = 'image/互動與問答/bobo_black.png';
         mascotText.innerText = '「太棒了！這種四季情調真優雅。那麼，您打算用哪款和風茗茶來佐以品茗呢？」';
         
         // 切換到下一步
@@ -577,7 +577,7 @@ function initInteractiveGame() {
     matchedProduct = productDatabase.find(p => p.id === targetProductId) || productDatabase[0];
 
     // 更新兔子開心狀態
-    mascotImg.src = 'image/互動與問答/bobo.png';
+    mascotImg.src = 'image/互動與問答/bobo_black.png';
     mascotText.innerText = `「配對成功！您今日的心靈茶席已經安排妥當。這款【${matchedProduct.name}】搭配【${teaName}】，絕對是頂級享受！」`;
 
     // 渲染推薦區域
@@ -602,7 +602,7 @@ function initInteractiveGame() {
       if (matchedProduct) {
         addToCart(matchedProduct.id);
         // 吉祥物提醒
-        mascotImg.src = 'image/互動與問答/bobo.png'; 
+        mascotImg.src = 'image/互動與問答/bobo_black.png'; 
         mascotText.innerText = `「配對和菓子已經放進茶袋囉！歡迎前往右上方購物袋進行結帳喔！」`;
       }
     });
@@ -614,7 +614,7 @@ function initInteractiveGame() {
       selectedMood = '';
       selectedTea = '';
       matchedProduct = null;
-      mascotImg.src = 'image/互動與問答/bobo.png';
+      mascotImg.src = 'image/互動與問答/bobo_black.png';
       mascotText.innerText = '「讓我們重新探索心靈與和菓子的奇妙連結吧，順從您的直覺～」';
 
       document.getElementById('quiz-result').classList.remove('active');
