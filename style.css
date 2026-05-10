@@ -1639,12 +1639,14 @@ body {
 }
 
 .ai-chat-avatar {
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: #FAFAF8;
-  padding: 3px;
-  border: 1.5px solid var(--color-surface-strong);
+  background: #FFF;
+  padding: 4px;
+  border: 1.5px solid var(--color-primary-light);
+  object-fit: contain; /* 關鍵修正：防止圖片變形擠壓 */
+  flex-shrink: 0; /* 防止被標題文字擠壓 */
 }
 
 .ai-chat-title h4 {
