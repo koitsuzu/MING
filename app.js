@@ -622,14 +622,7 @@ function initInteractiveGame() {
     });
   }
 
-  // 常駐右下角小狐狸點擊，平滑滾動到遊戲區
-  const widget = document.getElementById('mascot-widget');
-  if (widget) {
-    widget.addEventListener('click', () => {
-      const gameSec = document.getElementById('interactive-game');
-      if (gameSec) gameSec.scrollIntoView({ behavior: 'smooth' });
-    });
-  }
+
 }
 
 /* 
