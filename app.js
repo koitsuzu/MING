@@ -540,8 +540,8 @@ function initInteractiveGame() {
 
       if (currentStepNum === 1) {
         selectedMood = btn.getAttribute('data-answer');
-        // 切換小狐狸表情與對話
-        mascotImg.src = 'image/互動與問答/bo2.png'; // 驚喜/期待
+        // 切換兔子助理對話 (保持吹泡泡兔子形象)
+        mascotImg.src = 'image/互動與問答/bobo.png';
         mascotText.innerText = '「太棒了！這種四季情調真優雅。那麼，您打算用哪款和風茗茶來佐以品茗呢？」';
         
         // 切換到下一步
@@ -576,8 +576,8 @@ function initInteractiveGame() {
 
     matchedProduct = productDatabase.find(p => p.id === targetProductId) || productDatabase[0];
 
-    // 更新小狐狸開心狀態
-    mascotImg.src = 'image/互動與問答/bo1.png'; // 雙手比讚 / 超開心
+    // 更新兔子開心狀態
+    mascotImg.src = 'image/互動與問答/bobo.png';
     mascotText.innerText = `「配對成功！您今日的心靈茶席已經安排妥當。這款【${matchedProduct.name}】搭配【${teaName}】，絕對是頂級享受！」`;
 
     // 渲染推薦區域
@@ -602,8 +602,8 @@ function initInteractiveGame() {
       if (matchedProduct) {
         addToCart(matchedProduct.id);
         // 吉祥物提醒
-        mascotImg.src = 'image/互動與問答/do1.png'; // 導引/結帳
-        mascotText.innerText = `「配對和菓子已經放進茶袋囉！歡迎點選右下角小狐狸，或是右上方購物袋進行結帳喔！」`;
+        mascotImg.src = 'image/互動與問答/bobo.png'; 
+        mascotText.innerText = `「配對和菓子已經放進茶袋囉！歡迎前往右上方購物袋進行結帳喔！」`;
       }
     });
   }
